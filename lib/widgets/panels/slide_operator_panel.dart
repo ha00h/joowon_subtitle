@@ -10,6 +10,7 @@ import '../../providers/playback_provider.dart';
 import '../../providers/style_provider.dart';
 import '../../services/sub_io.dart';
 import '../canvas/canvas_renderer.dart';
+import '../common/always_visible_scrollbar.dart';
 import '../common/aspect_ratio_fhd.dart';
 
 /// 조작 화면 메인 영역 — 검색(단일 곡) / 예배 순서(전체 목록) 레이아웃
@@ -62,7 +63,7 @@ class _SlideOperatorPanelState extends ConsumerState<SlideOperatorPanel> {
     }
 
     return ScrollConfiguration(
-      behavior: _AlwaysVisibleScrollbarBehavior(),
+      behavior: const AlwaysVisibleScrollbarBehavior(),
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
         child: _SlideGrid(
@@ -123,7 +124,7 @@ class _OrderSequenceLayoutState extends State<_OrderSequenceLayout> {
     }
 
     return ScrollConfiguration(
-      behavior: _AlwaysVisibleScrollbarBehavior(),
+      behavior: const AlwaysVisibleScrollbarBehavior(),
       child: ListView.separated(
         controller: widget.verticalController,
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
@@ -395,20 +396,6 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _AlwaysVisibleScrollbarBehavior extends MaterialScrollBehavior {
-  @override
-  Widget buildScrollbar(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) {
-    return Scrollbar(
-      controller: details.controller,
-      thumbVisibility: true,
-      child: child,
-    );
-  }
-}
 
 class _SlideGridActions {
   const _SlideGridActions({required this.notifier});

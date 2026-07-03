@@ -131,24 +131,6 @@ class StyleNotifier extends Notifier<StyleState> {
       state = state.copyWith(style: style);
     }
   }
-
-  Future<void> deleteStyle(StyleEntry entry) async {
-    if (state.catalog.length <= 1) {
-      throw StateError('마지막 스타일은 삭제할 수 없습니다');
-    }
-
-    await _store.deleteStyle(entry.path);
-    await refreshCatalog();
-
-    if (state.activePath == entry.path) {
-      final next = state.catalog.first;
-      await selectStyle(next);
-    }
-  }
-
-  void applyStyleDraft(StyleFile style) {
-    state = state.copyWith(style: style);
-  }
 }
 
 final styleProvider = NotifierProvider<StyleNotifier, StyleState>(
@@ -159,6 +141,3 @@ final styleProvider = NotifierProvider<StyleNotifier, StyleState>(
 final activeStyleFileProvider = Provider<StyleFile>(
   (ref) => ref.watch(styleProvider).style,
 );
-
-/// 하위 호환 alias
-final activeStyleProvider = activeStyleFileProvider;

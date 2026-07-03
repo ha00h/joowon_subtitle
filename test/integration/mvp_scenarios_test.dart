@@ -132,9 +132,12 @@ void main() {
     test('txt 가져오기·슬라이드 넘김·PlaybackSyncStore 반영', () async {
       final c = makeContainer();
       final txtPath = p.join(hymnsDir.path, 'sample.txt');
-      final subPath = subIo.subPathForTxt(txtPath);
+      final subPath = p.setExtension(txtPath, '.sub');
 
-      final sub = subIo.fromTxtFile(txtPath);
+      final sub = subIo.fromTxt(
+        content: File(txtPath).readAsStringSync(),
+        title: p.basenameWithoutExtension(txtPath),
+      );
       subIo.writeFile(subPath, sub);
       expect(File(subPath).existsSync(), isTrue);
 

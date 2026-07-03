@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
 
 import '../models/slide_elements.dart';
@@ -60,15 +59,5 @@ class SubIo {
     }).toList();
 
     return SubFile(title: title, slides: slides);
-  }
-
-  SubFile fromTxtFile(String txtPath, {StyleFile? style}) {
-    final content = File(txtPath).readAsStringSync();
-    final title = p.basenameWithoutExtension(txtPath);
-    return fromTxt(content: content, title: title, style: style);
-  }
-
-  String subPathForTxt(String txtPath) {
-    return p.setExtension(txtPath, '.sub');
   }
 }

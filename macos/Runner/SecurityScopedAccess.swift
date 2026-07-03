@@ -17,8 +17,6 @@ class SecurityScopedAccessPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "pickDirectory":
       pickDirectory(call, result: result)
-    case "pickStyleFile":
-      pickStyleFile(call, result: result)
     case "restoreBookmark":
       restoreBookmark(call, result: result)
     default:
@@ -36,36 +34,6 @@ class SecurityScopedAccessPlugin: NSObject, FlutterPlugin {
     dialog.canChooseFiles = false
     dialog.allowsMultipleSelection = false
     dialog.title = "찬양 작업 폴더 선택"
-
-    guard let window = NSApp.keyWindow ?? NSApp.windows.first else {
-      result(nil)
-      return
-    }
-
-    dialog.beginSheetModal(for: window) { response in
-      guard response == .OK, let url = dialog.url else {
-        result(nil)
-        return
-      }
-      result(self.makePickResult(url: url))
-    }
-  }
-
-  private func pickStyleFile(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    let args = call.arguments as? [String: Any]
-    let dialog = NSOpenPanel()
-    if let initial = args?["initialDirectory"] as? String, !initial.isEmpty {
-      dialog.directoryURL = URL(fileURLWithPath: initial)
-    }
-    dialog.canChooseDirectories = false
-    dialog.canChooseFiles = true
-    dialog.allowsMultipleSelection = false
-    dialog.title = ".style 파일 선택"
-    if #available(macOS 11.0, *) {
-      dialog.allowedContentTypes = [.init(filenameExtension: "style")!]
-    } else {
-      dialog.allowedFileTypes = ["style"]
-    }
 
     guard let window = NSApp.keyWindow ?? NSApp.windows.first else {
       result(nil)

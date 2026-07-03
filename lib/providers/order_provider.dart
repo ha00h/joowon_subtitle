@@ -111,17 +111,6 @@ class OrderNotifier extends Notifier<OrderState> {
     _persistActiveSelection();
   }
 
-  Future<void> deleteOrder(String id) async {
-    await _repo.deleteOrder(id);
-    final orders = state.orders.where((o) => o.id != id).toList();
-    state = OrderState(
-      orders: orders,
-      activeOrderId: state.activeOrderId == id ? null : state.activeOrderId,
-      activeItemIndex: 0,
-    );
-    _persistActiveSelection();
-  }
-
   void setActiveOrder(String? id) {
     state = state.copyWith(activeOrderId: id, activeItemIndex: 0);
     _persistActiveSelection();

@@ -27,15 +27,6 @@ class SecurityScopedAccess {
     return _parsePickResult(result);
   }
 
-  static Future<PickedPath?> pickStyleFile({String? initialDirectory}) async {
-    if (!isSupported) return null;
-    final result = await _channel.invokeMethod<Object?>(
-      'pickStyleFile',
-      {'initialDirectory': initialDirectory},
-    );
-    return _parsePickResult(result);
-  }
-
   static Future<String?> restoreBookmark(String bookmark) async {
     if (!isSupported || bookmark.isEmpty) return null;
     return _channel.invokeMethod<String?>(

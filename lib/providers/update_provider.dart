@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../models/app_release_info.dart';
+import '../repositories/app_settings_repository.dart';
 import '../services/update_service.dart';
+import 'settings_provider.dart' show appSettingsRepositoryProvider;
 
 enum UpdateStatus { idle, checking, upToDate, available, error }
 
@@ -43,18 +44,18 @@ class UpdateState {
   }
 }
 
+final updateServiceProvider = Provider<UpdateService>((ref) => UpdateService());
+
 class UpdateNotifier extends Notifier<UpdateState> {
-  static const _boxName = 'app_settings';
-  static const _skippedVersionKey = 'skippedUpdateVersion';
-  static const _lastCheckKey = 'lastUpdateCheckAt';
   static const _checkCooldown = Duration(hours: 24);
 
   late final UpdateService _service;
-  Box<String>? _box;
+  late AppSettingsRepository _repo;
 
   @override
   UpdateState build() {
-    _service = UpdateService();
+    _service = ref.read(updateServiceProvider);
+    _repo = ref.read(appSettingsRepositoryProvider);
     unawaited(_initCurrentVersion());
     return const UpdateState();
   }
@@ -64,22 +65,12 @@ class UpdateNotifier extends Notifier<UpdateState> {
     state = state.copyWith(currentVersion: version);
   }
 
-  Future<Box<String>> _settingsBox() async {
-    _box ??= Hive.isBoxOpen(_boxName)
-        ? Hive.box<String>(_boxName)
-        : await Hive.openBox<String>(_boxName);
-    return _box!;
-  }
-
   Future<void> checkAutomatic() async {
-    final box = await _settingsBox();
-    final lastCheckRaw = box.get(_lastCheckKey);
-    if (lastCheckRaw != null) {
-      final lastCheck = DateTime.tryParse(lastCheckRaw);
-      if (lastCheck != null &&
-          DateTime.now().difference(lastCheck) < _checkCooldown) {
-        return;
-      }
+    await _repo.init();
+    final lastCheck = _repo.readLastUpdateCheckAt();
+    if (lastCheck != null &&
+        DateTime.now().difference(lastCheck) < _checkCooldown) {
+      return;
     }
 
     await _check(showDialogOnAvailable: true);
@@ -102,10 +93,10 @@ class UpdateNotifier extends Notifier<UpdateState> {
         throw UpdateCheckException('릴리스 정보를 읽을 수 없습니다.');
       }
 
-      final box = await _settingsBox();
-      await box.put(_lastCheckKey, DateTime.now().toIso8601String());
+      await _repo.init();
+      await _repo.writeLastUpdateCheckAt(DateTime.now());
 
-      final skipped = box.get(_skippedVersionKey);
+      final skipped = _repo.readSkippedUpdateVersion();
       final hasUpdate = _service.isNewerVersion(current, release.version);
 
       if (!hasUpdate || release.version == skipped) {
@@ -139,8 +130,8 @@ class UpdateNotifier extends Notifier<UpdateState> {
   }
 
   Future<void> skipVersion(String version) async {
-    final box = await _settingsBox();
-    await box.put(_skippedVersionKey, version);
+    await _repo.init();
+    await _repo.writeSkippedUpdateVersion(version);
     state = state.copyWith(
       status: UpdateStatus.upToDate,
       pendingDialog: false,

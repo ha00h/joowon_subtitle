@@ -12,6 +12,7 @@ import 'constants/operator_theme.dart';
 import 'models/playback_sync_payload.dart';
 import 'models/window_args.dart';
 import 'providers/output_playback_provider.dart';
+import 'repositories/app_settings_repository.dart';
 import 'repositories/order_repository.dart';
 import 'services/playback_sync_store.dart';
 import 'services/playback_sync_service.dart';
@@ -32,7 +33,7 @@ Future<void> bootstrap({required bool isOutput}) async {
   }
 
   await OrderRepository().init();
-  await Hive.openBox<String>('app_settings');
+  await AppSettingsRepository().init();
   await _restorePersistedSecurityBookmarks();
   await PlaybackSyncStore.init();
 }
@@ -40,13 +41,15 @@ Future<void> bootstrap({required bool isOutput}) async {
 Future<void> _restorePersistedSecurityBookmarks() async {
   if (!Platform.isMacOS) return;
 
-  final box = Hive.box<String>('app_settings');
-  final workspaceBookmark = box.get('workspaceBookmark');
+  final repo = AppSettingsRepository()..attachOpenBox();
+  final workspaceBookmark =
+      repo.readBookmark(AppSettingsRepository.workspaceBookmarkKey);
   if (workspaceBookmark != null && workspaceBookmark.isNotEmpty) {
     await SecurityScopedAccess.restoreBookmark(workspaceBookmark);
   }
 
-  final styleBookmark = box.get('styleBookmark');
+  final styleBookmark =
+      repo.readBookmark(AppSettingsRepository.styleBookmarkKey);
   if (styleBookmark != null && styleBookmark.isNotEmpty) {
     await SecurityScopedAccess.restoreBookmark(styleBookmark);
   }

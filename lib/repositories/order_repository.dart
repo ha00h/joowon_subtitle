@@ -57,12 +57,6 @@ class OrderRepository {
     }
   }
 
-  Future<void> deleteOrder(String id) async {
-    await _box?.delete(id);
-    final ids = listOrderIds()..remove(id);
-    await _box?.put(_indexKey, jsonEncode(ids));
-  }
-
   ActiveOrderSelection readActiveSelection() {
     _ensureBox();
     final orderId = _box?.get(_activeOrderIdKey);
