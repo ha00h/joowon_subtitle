@@ -68,7 +68,7 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           ditto -c -k --sequesterRsrc --keepParent \
-            "build/macos/Build/Products/Release/주원 송출.app" \
+            build/macos/Build/Products/Release/JoowonCast.app \
             "joowon-subtitle-${VERSION}-macos.zip"
 
       - uses: actions/upload-artifact@v4

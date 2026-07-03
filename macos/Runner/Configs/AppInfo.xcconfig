@@ -5,7 +5,8 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = 주원 송출
+// ASCII only — Korean display name is set via CFBundleDisplayName in Info.plist.
+PRODUCT_NAME = JoowonCast
 
 // The application's bundle identifier
 PRODUCT_BUNDLE_IDENTIFIER = com.joowon.joowonSubtitle
