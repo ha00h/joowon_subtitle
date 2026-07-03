@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -52,7 +51,14 @@ void main() {
     PlaybackSyncStore.testReset();
     await Hive.close();
     if (tempDir.existsSync()) {
-      tempDir.deleteSync(recursive: true);
+      for (var attempt = 0; attempt < 10; attempt++) {
+        try {
+          tempDir.deleteSync(recursive: true);
+          break;
+        } on FileSystemException {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+        }
+      }
     }
   });
 
