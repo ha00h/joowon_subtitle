@@ -289,6 +289,7 @@ class _SlideGrid extends StatelessWidget {
                         context: context,
                         globalPosition: details.globalPosition,
                         slideIndex: index,
+                        slide: slide,
                         onBeforeAction: () => onSelectSlide(index),
                       ),
                     ),
@@ -418,6 +419,7 @@ class _SlideGridActions {
     required BuildContext context,
     required Offset globalPosition,
     required int slideIndex,
+    required Slide slide,
     required VoidCallback onBeforeAction,
   }) async {
     onBeforeAction();
@@ -432,6 +434,10 @@ class _SlideGridActions {
           Navigator.pop(ctx);
           notifier.duplicateSlideAfter(slideIndex);
         },
+        onQuickEdit: () async {
+          Navigator.pop(ctx);
+          await _showQuickEditDialog(context, slideIndex, slide);
+        },
         onDelete: () {
           Navigator.pop(ctx);
           notifier.deleteSlideAt(slideIndex);
@@ -443,18 +449,64 @@ class _SlideGridActions {
       ),
     );
   }
+
+  Future<void> _showQuickEditDialog(
+    BuildContext context,
+    int slideIndex,
+    Slide slide,
+  ) async {
+    SlideElement? textEl;
+    for (final el in slide.elements) {
+      if (el.type == SlideElementType.text) {
+        textEl = el;
+        break;
+      }
+    }
+
+    final controller = TextEditingController(
+      text: textEl?.lines?.join('\n') ?? '',
+    );
+    final result = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('빠른 편집'),
+        content: TextField(
+          controller: controller,
+          maxLines: 8,
+          autofocus: true,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, controller.text),
+            child: const Text('적용'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (result != null) {
+      notifier.updateSlideTextAt(slideIndex, result.split('\n'));
+    }
+  }
 }
 
 class _SlideContextMenu extends StatefulWidget {
   const _SlideContextMenu({
     required this.position,
     required this.onDuplicate,
+    required this.onQuickEdit,
     required this.onDelete,
     required this.onSetTag,
   });
 
   final Offset position;
   final VoidCallback onDuplicate;
+  final VoidCallback onQuickEdit;
   final VoidCallback onDelete;
   final void Function(String? tag) onSetTag;
 
@@ -465,7 +517,7 @@ class _SlideContextMenu extends StatefulWidget {
 class _SlideContextMenuState extends State<_SlideContextMenu> {
   static const _menuWidth = 168.0;
   static const _rowHeight = 36.0;
-  static const _tagRowIndex = 2;
+  static const _tagRowIndex = 3;
 
   bool _tagHovered = false;
 
@@ -496,6 +548,10 @@ class _SlideContextMenuState extends State<_SlideContextMenu> {
                       _ContextMenuAction(
                         label: '복사(복제)',
                         onSelected: widget.onDuplicate,
+                      ),
+                      _ContextMenuAction(
+                        label: '빠른 편집',
+                        onSelected: widget.onQuickEdit,
                       ),
                       _ContextMenuAction(
                         label: '삭제',
