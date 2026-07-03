@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  release-windows:
+  build-windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,14 +20,12 @@ jobs:
           flutter-version: '3.44.2'
           cache: true
 
-      - name: Resolve version from tag
+      - name: Resolve version
         id: version
         shell: pwsh
         run: |
-          $tag = "${{ github.ref_name }}"
-          $version = $tag -replace '^v',''
+          $version = "${{ github.ref_name }}" -replace '^v',''
           echo "version=$version" >> $env:GITHUB_OUTPUT
-          echo "tag=$tag" >> $env:GITHUB_OUTPUT
 
       - run: flutter pub get
 
@@ -37,13 +35,59 @@ jobs:
       - name: Package zip
         shell: pwsh
         run: |
-          $zip = "joowon-subtitle-${{ steps.version.outputs.version }}-windows.zip"
-          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath $zip
-          echo "ZIP_NAME=$zip" >> $env:GITHUB_ENV
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath joowon-subtitle-${{ steps.version.outputs.version }}-windows.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: joowon-subtitle-*-windows.zip
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.2'
+          cache: true
+
+      - name: Resolve version
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - run: flutter pub get
+
+      - name: Build macOS release
+        run: flutter build macos --release --build-name=${{ steps.version.outputs.version }} --build-number=1
+
+      - name: Package zip
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          ditto -c -k --sequesterRsrc --keepParent \
+            build/macos/Build/Products/Release/joowon_subtitle.app \
+            "joowon-subtitle-${VERSION}-macos.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: joowon-subtitle-*-macos.zip
+
+  release:
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: Joowon Subtitle ${{ steps.version.outputs.tag }}
+          name: Joowon Subtitle ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
-          files: ${{ env.ZIP_NAME }}
+          files: dist/*.zip
           generate_release_notes: true
