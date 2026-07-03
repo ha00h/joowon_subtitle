@@ -27,12 +27,16 @@ bool _isCssRgbaOrder(String eightChars) {
 
 /// Color → `#RRGGBB` 또는 `#RRGGBBAA`(supportsAlpha)
 String colorToHex(Color color, {bool withAlpha = false}) {
-  final r = color.red.toRadixString(16).padLeft(2, '0').toUpperCase();
-  final g = color.green.toRadixString(16).padLeft(2, '0').toUpperCase();
-  final b = color.blue.toRadixString(16).padLeft(2, '0').toUpperCase();
-  if (!withAlpha || color.alpha == 0xFF) return '#$r$g$b';
-  final a = color.alpha.toRadixString(16).padLeft(2, '0').toUpperCase();
+  final r = _channelHex(color.r);
+  final g = _channelHex(color.g);
+  final b = _channelHex(color.b);
+  final a = _channelHex(color.a);
+  if (!withAlpha || a == 'FF') return '#$r$g$b';
   return '#$r$g$b$a';
+}
+
+String _channelHex(double channel) {
+  return (channel * 255.0).round().clamp(0, 255).toRadixString(16).padLeft(2, '0').toUpperCase();
 }
 
 Color? tryParseHexColor(String hex) {
