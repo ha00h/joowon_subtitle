@@ -1,0 +1,19 @@
+{
+  "format": "joowon-subtitle-style",
+  "version": 1,
+  "name": "주일예배",
+  "text": {
+    "fontFamily": "Noto Sans KR",
+    "fontSize": 72,
+    "fontWeight": 700,
+    "color": "#FFFFFF",
+    "textShadow": "2px 2px 8px rgba(0,0,0,0.8)",
+    "defaultPosition": {
+      "x": 50,
+      "y": 50
+    }
+  },
+  "output": {
+    "backgroundMode": "black"
+  }
+}

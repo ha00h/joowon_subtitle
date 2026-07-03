@@ -1,0 +1,55 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "내 영혼이 은총 입어",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t1",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "내 영혼이 은총 입어",
+            "구주 예수 만난 날"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t2",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "죄에서 자유함 얻고",
+            "평화가 내 맘에 가득해"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t3",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주님만이 나의 소망",
+            "영원히 찬양하리"
+          ],
+          "anchor": "center"
+        }
+      ]
+    }
+  ]
+}

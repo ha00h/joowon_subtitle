@@ -1,0 +1,55 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "은혜 아니면",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t1",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "은혜 아니면",
+            "이 땅에 무엇이 있으리"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t2",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주님의 사랑",
+            "나를 감싸 안으시네"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t3",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "감사와 찬양",
+            "주께 드리리"
+          ],
+          "anchor": "center"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "주님 앞에 나아가",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t1",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주님 앞에 나아가",
+            "겸손히 무릎 꿇고"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t2",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "내 모든 죄를 고백하며",
+            "용서를 구하네"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t3",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주님의 사랑",
+            "나를 새롭게 하시네"
+          ],
+          "anchor": "center"
+        }
+      ]
+    }
+  ]
+}

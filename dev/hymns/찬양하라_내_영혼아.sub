@@ -1,0 +1,55 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "찬양하라 내 영혼아",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t1",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "찬양하라 내 영혼아",
+            "주를 찬양하라"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t2",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "그의 모든 은혜를",
+            "잊지 말지어다"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t3",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "하늘 높이 찬양해",
+            "주 하나님 영원히"
+          ],
+          "anchor": "center"
+        }
+      ]
+    }
+  ]
+}

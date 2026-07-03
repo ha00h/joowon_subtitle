@@ -1,0 +1,62 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "주님의_마음",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "7fde8ad5-07eb-4b88-ac1c-41369e7fdcbb",
+          "x": 40.298132183908045,
+          "y": 67.92305236270754,
+          "zIndex": 1,
+          "lines": [
+            "주님의 마음 내게 주사",
+            "내 마음 기쁨 넘치네"
+          ],
+          "anchor": "center",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "e348d357-08cb-497d-bdb5-311688d24733",
+          "x": 40.298132183908045,
+          "y": 67.92305236270754,
+          "zIndex": 1,
+          "lines": [
+            "거룩하신 주님 앞에",
+            "모든 것 드립니다",
+            "영광과 존귀"
+          ],
+          "anchor": "center",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "f3c31eea-9da3-4245-abbc-2d21fccc952e",
+          "x": 40.298132183908045,
+          "y": 67.92305236270754,
+          "zIndex": 1,
+          "lines": [
+            "할렐루야",
+            "찬양해"
+          ],
+          "anchor": "center",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "예수 사랑하심",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t1",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "예수 사랑하심",
+            "나 같은 죄인 살리신"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t2",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "십자가의 보혈로",
+            "새 생명 주셨네"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t3",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "내 모든 것 드리고",
+            "주님만 따르리"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t4",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "예수 사랑하심",
+            "영원히 변치 않네"
+          ],
+          "anchor": "center"
+        }
+      ]
+    }
+  ]
+}

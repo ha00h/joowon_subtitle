@@ -1,0 +1,55 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "온 땅에 퍼져라",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t1",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "온 땅에 퍼져라",
+            "복음의 소리"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t2",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "모든 민족에게",
+            "주님의 사랑 전하라"
+          ],
+          "anchor": "center"
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t3",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "할렐루야",
+            "주님께 영광"
+          ],
+          "anchor": "center"
+        }
+      ]
+    }
+  ]
+}

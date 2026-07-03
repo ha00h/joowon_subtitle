@@ -1,0 +1,389 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../models/resolved_text_style.dart';
+import '../../models/slide_elements.dart';
+import '../../models/sub_file.dart';
+import '../../providers/operator_ui_provider.dart';
+import '../../providers/order_provider.dart';
+import '../../providers/playback_provider.dart';
+import '../../providers/style_provider.dart';
+import '../../services/sub_io.dart';
+import '../canvas/canvas_renderer.dart';
+import '../common/aspect_ratio_fhd.dart';
+
+/// 조작 화면 메인 영역 — 검색(단일 곡) / 예배 순서(전체 목록) 레이아웃
+class SlideOperatorPanel extends ConsumerStatefulWidget {
+  const SlideOperatorPanel({super.key});
+
+  @override
+  ConsumerState<SlideOperatorPanel> createState() => _SlideOperatorPanelState();
+}
+
+class _SlideOperatorPanelState extends ConsumerState<SlideOperatorPanel> {
+  final _verticalScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _verticalScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final playback = ref.watch(playbackProvider);
+    final orderState = ref.watch(orderProvider);
+    final styleFile = ref.watch(activeStyleFileProvider);
+    final resolver = StyleResolver(styleFile: styleFile);
+    final subIo = ref.read(subIoProvider);
+    final notifier = ref.read(playbackProvider.notifier);
+
+    final sub = playback.currentSub;
+    final gridColumns = ref.watch(operatorUiProvider).gridColumns;
+
+    if (sub == null || sub.slides.isEmpty) {
+      return const _EmptyState();
+    }
+
+    if (playback.panelLayout == SlidePanelLayout.orderSequence &&
+        orderState.activeOrder != null) {
+      return _OrderSequenceLayout(
+        playback: playback,
+        orderState: orderState,
+        subIo: subIo,
+        gridColumns: gridColumns,
+        resolveText: resolver.resolveText,
+        verticalController: _verticalScrollController,
+        onSelectSlide: (itemIndex, slideIndex) {
+          notifier.loadOrderItem(itemIndex, slideIndex: slideIndex);
+        },
+      );
+    }
+
+    return ScrollConfiguration(
+      behavior: _AlwaysVisibleScrollbarBehavior(),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+        child: _SlideGrid(
+          sub: sub,
+          gridColumns: gridColumns,
+          liveSlideIndex:
+              playback.slideIndex >= 0 ? playback.slideIndex : null,
+          resolveText: resolver.resolveText,
+          onSelectSlide: notifier.goToSlide,
+        ),
+      ),
+    );
+  }
+}
+
+class _OrderSequenceLayout extends StatefulWidget {
+  const _OrderSequenceLayout({
+    required this.playback,
+    required this.orderState,
+    required this.subIo,
+    required this.gridColumns,
+    required this.resolveText,
+    required this.verticalController,
+    required this.onSelectSlide,
+  });
+
+  final PlaybackState playback;
+  final OrderState orderState;
+  final SubIo subIo;
+  final int gridColumns;
+  final ResolvedTextStyle Function(SlideElement) resolveText;
+  final ScrollController verticalController;
+  final void Function(int itemIndex, int slideIndex) onSelectSlide;
+
+  @override
+  State<_OrderSequenceLayout> createState() => _OrderSequenceLayoutState();
+}
+
+class _OrderSequenceLayoutState extends State<_OrderSequenceLayout> {
+  Object? _lastScrollKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final order = widget.orderState.activeOrder!;
+    final scrollKey = Object.hash(
+      order.id,
+      widget.playback.currentPath,
+      widget.playback.slideIndex,
+    );
+    if (scrollKey != _lastScrollKey) {
+      _lastScrollKey = scrollKey;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToActiveSection(widget.orderState.activeItemIndex);
+      });
+    }
+
+    return ScrollConfiguration(
+      behavior: _AlwaysVisibleScrollbarBehavior(),
+      child: ListView.separated(
+        controller: widget.verticalController,
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+        itemCount: order.items.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 24),
+        itemBuilder: (context, itemIndex) {
+          final item = order.items[itemIndex];
+          SubFile sub;
+          try {
+            sub = widget.subIo.readFile(item.filePath);
+          } catch (_) {
+            return _HymnTitle(title: item.title, error: '파일을 읽을 수 없습니다');
+          }
+          if (sub.slides.isEmpty) {
+            return _HymnTitle(title: sub.title, error: '슬라이드 없음');
+          }
+
+          final isActiveHymn = widget.playback.currentPath == item.filePath;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                sub.title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 10),
+              _SlideGrid(
+                sub: sub,
+                gridColumns: widget.gridColumns,
+                liveSlideIndex: isActiveHymn && widget.playback.slideIndex >= 0
+                    ? widget.playback.slideIndex
+                    : null,
+                resolveText: widget.resolveText,
+                onSelectSlide: (slideIndex) =>
+                    widget.onSelectSlide(itemIndex, slideIndex),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _scrollToActiveSection(int itemIndex) {
+    if (!widget.verticalController.hasClients) return;
+    const sectionHeight = 280.0;
+    final target = (itemIndex * sectionHeight)
+        .clamp(0.0, widget.verticalController.position.maxScrollExtent);
+    widget.verticalController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOut,
+    );
+  }
+}
+
+class _HymnTitle extends StatelessWidget {
+  const _HymnTitle({required this.title, this.error});
+
+  final String title;
+  final String? error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        if (error != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            error!,
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _SlideGrid extends StatelessWidget {
+  const _SlideGrid({
+    required this.sub,
+    required this.gridColumns,
+    required this.liveSlideIndex,
+    required this.resolveText,
+    required this.onSelectSlide,
+  });
+
+  final SubFile sub;
+  final int gridColumns;
+  final int? liveSlideIndex;
+  final ResolvedTextStyle Function(SlideElement) resolveText;
+  final ValueChanged<int> onSelectSlide;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const crossSpacing = 16.0;
+        const mainSpacing = 20.0;
+        final cellWidth = (constraints.maxWidth -
+                (gridColumns - 1) * crossSpacing) /
+            gridColumns;
+        const labelHeight = 28.0;
+        final thumbHeight = cellWidth / AspectRatioFhd.aspectRatio;
+        final cellHeight = labelHeight + thumbHeight;
+        final aspectRatio = cellWidth / cellHeight;
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: gridColumns,
+            crossAxisSpacing: crossSpacing,
+            mainAxisSpacing: mainSpacing,
+            childAspectRatio: aspectRatio,
+          ),
+          itemCount: sub.slides.length,
+          itemBuilder: (context, index) {
+            final slideNumber = index + 1;
+            final isLive = liveSlideIndex == index;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '[$slideNumber]',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: isLive ? FontWeight.bold : FontWeight.w500,
+                        color: isLive
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Expanded(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: _SlideThumb(
+                    slide: sub.slides[index],
+                    isLive: isLive,
+                    resolveText: resolveText,
+                    onTap: () => onSelectSlide(index),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _SlideThumb extends StatelessWidget {
+  const _SlideThumb({
+    required this.slide,
+    required this.isLive,
+    required this.resolveText,
+    required this.onTap,
+  });
+
+  static const _outerPadding = 6.0;
+  static const _borderWidth = 2.0;
+
+  final Slide slide;
+  final bool isLive;
+  final ResolvedTextStyle Function(SlideElement) resolveText;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.all(_outerPadding),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: isLive
+              ? colorScheme.primaryContainer
+              : colorScheme.surface.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isLive
+                ? colorScheme.primary
+                : colorScheme.outlineVariant.withValues(alpha: 0.5),
+            width: _borderWidth,
+          ),
+          boxShadow: isLive
+              ? [
+                  BoxShadow(
+                    color: colorScheme.primary.withValues(alpha: 0.28),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Material(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(8),
+            clipBehavior: Clip.antiAlias,
+            elevation: isLive ? 2 : 0,
+            child: InkWell(
+              onTap: onTap,
+              child: AspectRatio(
+                aspectRatio: AspectRatioFhd.aspectRatio,
+                child: ColoredBox(
+                  color: Colors.black,
+                  child: CanvasRenderer(
+                    elements: slide.elements,
+                    resolveText: resolveText,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        '왼쪽에서 찬양을 선택하세요',
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color:
+                  Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
+            ),
+      ),
+    );
+  }
+}
+
+class _AlwaysVisibleScrollbarBehavior extends MaterialScrollBehavior {
+  @override
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    return Scrollbar(
+      controller: details.controller,
+      thumbVisibility: true,
+      child: child,
+    );
+  }
+}
