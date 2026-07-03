@@ -68,7 +68,7 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           ditto -c -k --sequesterRsrc --keepParent \
-            build/macos/Build/Products/Release/joowon_subtitle.app \
+            "build/macos/Build/Products/Release/주원 송출.app" \
             "joowon-subtitle-${VERSION}-macos.zip"
 
       - uses: actions/upload-artifact@v4
@@ -87,7 +87,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: Joowon Subtitle ${{ github.ref_name }}
+          name: 주원 송출 ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
           files: dist/*.zip
           generate_release_notes: true

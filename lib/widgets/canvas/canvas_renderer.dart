@@ -87,7 +87,7 @@ class CanvasRenderer extends StatelessWidget {
       left: el.x / 100 * w,
       top: el.y / 100 * h,
       child: FractionalTranslation(
-        translation: const Offset(-0.5, -0.5),
+        translation: anchorFractionalTranslation(el.anchor),
         child: content,
       ),
     );

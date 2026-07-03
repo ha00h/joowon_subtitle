@@ -53,7 +53,7 @@ class SubIo {
             height: region.height,
             zIndex: 1,
             lines: lines,
-            anchor: 'center',
+            anchor: 'topLeft',
           ),
         ],
       );

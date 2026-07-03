@@ -29,7 +29,28 @@ void main() {
       expect(two.width, greaterThanOrEqualTo(one.width));
     });
 
-    test('textElementScreenRect is centered on element position', () {
+    test('textElementScreenRect uses top-left when anchor is topLeft', () {
+      const element = SlideElement(
+        id: 't1',
+        type: SlideElementType.text,
+        x: 10,
+        y: 20,
+        zIndex: 1,
+        lines: ['가사'],
+        anchor: 'topLeft',
+      );
+      final rect = textElementScreenRect(
+        element: element,
+        style: style,
+        canvasWidth: 800,
+        canvasHeight: 450,
+      );
+      expect(rect.topLeft, const Offset(80, 90));
+      expect(rect.width, greaterThan(0));
+      expect(rect.height, greaterThan(0));
+    });
+
+    test('textElementScreenRect is centered when anchor is center', () {
       const element = SlideElement(
         id: 't1',
         type: SlideElementType.text,
@@ -37,6 +58,7 @@ void main() {
         y: 50,
         zIndex: 1,
         lines: ['가사'],
+        anchor: 'center',
       );
       final rect = textElementScreenRect(
         element: element,
@@ -45,8 +67,6 @@ void main() {
         canvasHeight: 450,
       );
       expect(rect.center, const Offset(400, 225));
-      expect(rect.width, greaterThan(0));
-      expect(rect.height, greaterThan(0));
     });
 
     test('canvasTextAlign maps strings', () {

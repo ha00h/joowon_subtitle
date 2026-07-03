@@ -374,13 +374,16 @@ class PlaybackNotifier extends Notifier<PlaybackState> {
   }
 
   void addTextElement() {
+    final style = ref.read(activeStyleFileProvider);
+    final region = style.primaryBodyRegion;
     final el = SlideElement(
       id: _uuid.v4(),
       type: SlideElementType.text,
-      x: 50,
-      y: 50,
+      x: region.x,
+      y: region.y,
       zIndex: _nextZIndex(),
       lines: const ['새 가사'],
+      anchor: 'topLeft',
     );
     _updateCurrentSlideElements([..._currentElements(), el]);
     selectElement(el.id);
@@ -449,15 +452,19 @@ class PlaybackNotifier extends Notifier<PlaybackState> {
     final sub = _sub;
     if (sub == null) return;
 
+    final style = ref.read(activeStyleFileProvider);
+    final region = style.primaryBodyRegion;
+
     final slide = Slide(
       elements: [
         SlideElement(
           id: _uuid.v4(),
           type: SlideElementType.text,
-          x: 50,
-          y: 50,
+          x: region.x,
+          y: region.y,
           zIndex: 0,
           lines: const [''],
+          anchor: 'topLeft',
         ),
       ],
     );
@@ -468,26 +475,29 @@ class PlaybackNotifier extends Notifier<PlaybackState> {
   }
 
   void deleteSlide() {
+    deleteSlideAt(state.slideIndex);
+  }
+
+  void deleteSlideAt(int index) {
     final sub = _sub;
     if (sub == null || sub.slides.length <= 1) return;
+    if (index < 0 || index >= sub.slides.length) return;
 
-    final idx = state.slideIndex;
-    final slides = [...sub.slides]..removeAt(idx);
+    final slides = [...sub.slides]..removeAt(index);
     updateSub(sub.copyWith(slides: slides));
-    state = state.copyWith(
-      slideIndex: idx.clamp(0, slides.length - 1),
-    );
+    final nextIndex = index >= slides.length ? slides.length - 1 : index;
+    state = state.copyWith(slideIndex: nextIndex);
     selectElement(null);
     _syncToOutput();
   }
 
-  void duplicateSlide() {
+  void duplicateSlideAfter(int index) {
     final sub = _sub;
-    if (sub == null) return;
+    if (sub == null || index < 0 || index >= sub.slides.length) return;
 
-    final idx = state.slideIndex;
-    final source = sub.slides[idx];
+    final source = sub.slides[index];
     final copy = Slide(
+      tag: source.tag,
       elements: source.elements
           .map(
             (e) => e.copyWith(id: _uuid.v4()),
@@ -495,10 +505,63 @@ class PlaybackNotifier extends Notifier<PlaybackState> {
           .toList(),
     );
     final slides = [...sub.slides];
-    slides.insert(idx + 1, copy);
+    slides.insert(index + 1, copy);
     updateSub(sub.copyWith(slides: slides));
-    state = state.copyWith(slideIndex: idx + 1);
+    state = state.copyWith(slideIndex: index + 1);
     _syncToOutput();
+  }
+
+  void duplicateSlide() {
+    final idx = state.slideIndex;
+    if (idx < 0) return;
+    duplicateSlideAfter(idx);
+  }
+
+  void setSlideTag(int index, String? tag) {
+    final sub = _sub;
+    if (sub == null || index < 0 || index >= sub.slides.length) return;
+
+    final slides = [...sub.slides];
+    slides[index] = slides[index].copyWith(
+      tag: tag,
+      clearTag: tag == null,
+    );
+    updateSub(sub.copyWith(slides: slides));
+  }
+
+  void updateSlideTextAt(int index, List<String> lines) {
+    final sub = _sub;
+    if (sub == null || index < 0 || index >= sub.slides.length) return;
+
+    final slide = sub.slides[index];
+    var textUpdated = false;
+    final elements = slide.elements.map((e) {
+      if (!textUpdated && e.type == SlideElementType.text) {
+        textUpdated = true;
+        return e.copyWith(lines: lines);
+      }
+      return e;
+    }).toList();
+
+    if (!textUpdated) {
+      final style = ref.read(activeStyleFileProvider);
+      final region = style.primaryBodyRegion;
+      elements.add(
+        SlideElement(
+          id: _uuid.v4(),
+          type: SlideElementType.text,
+          x: region.x,
+          y: region.y,
+          zIndex: 0,
+          lines: lines,
+          anchor: 'topLeft',
+        ),
+      );
+    }
+
+    final slides = [...sub.slides];
+    slides[index] = Slide(elements: elements, tag: slide.tag);
+    updateSub(sub.copyWith(slides: slides));
   }
 
   void goToSlide(int index) {
@@ -656,10 +719,8 @@ class PlaybackNotifier extends Notifier<PlaybackState> {
     loadSub(
       order.items[itemIndex].filePath,
       layout: SlidePanelLayout.orderSequence,
+      slideIndex: slideIndex,
     );
-    if (slideIndex > 0) {
-      goToSlide(slideIndex);
-    }
   }
 }
 
@@ -742,6 +803,7 @@ SlideElement applyStyleConfigToTextElement(
     textAlign: text.textAlign,
     x: x,
     y: y,
+    anchor: 'topLeft',
   );
 }
 

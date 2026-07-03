@@ -107,17 +107,14 @@ class _StyleRegionCanvasState extends State<StyleRegionCanvas> {
   }
 
   SlideElement _previewElement(TextRegionConfig region) {
-    final sample = region.id == 'title'
-        ? const ['제목 영역']
-        : const ['본문 영역', '가사 미리보기'];
     return SlideElement(
       id: region.id,
       type: SlideElementType.text,
       x: region.x,
       y: region.y,
       zIndex: 1,
-      lines: sample,
-      anchor: 'center',
+      lines: const ['본문 영역', '가사 미리보기'],
+      anchor: 'topLeft',
     );
   }
 

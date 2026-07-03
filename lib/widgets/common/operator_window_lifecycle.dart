@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../providers/output_window_provider.dart';
+import '../../services/app_shutdown.dart';
 
 /// 조작 창이 닫힐 때 송출 창도 함께 종료한다.
 class OperatorWindowLifecycle extends ConsumerStatefulWidget {
@@ -19,8 +19,6 @@ class OperatorWindowLifecycle extends ConsumerStatefulWidget {
 
 class _OperatorWindowLifecycleState extends ConsumerState<OperatorWindowLifecycle>
     with WindowListener {
-  var _closing = false;
-
   @override
   void initState() {
     super.initState();
@@ -36,21 +34,7 @@ class _OperatorWindowLifecycleState extends ConsumerState<OperatorWindowLifecycl
 
   @override
   void onWindowClose() {
-    unawaited(_closeAllWindows());
-  }
-
-  Future<void> _closeAllWindows() async {
-    if (_closing) return;
-    _closing = true;
-
-    try {
-      if (ref.read(outputWindowProvider).isOpen) {
-        await ref.read(outputWindowProvider.notifier).closeOutputWindow();
-      }
-    } finally {
-      await windowManager.setPreventClose(false);
-      await windowManager.close();
-    }
+    unawaited(shutdownApplication(ref));
   }
 
   @override

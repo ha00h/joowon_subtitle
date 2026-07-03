@@ -57,6 +57,7 @@ class _SlideOperatorPanelState extends ConsumerState<SlideOperatorPanel> {
         onSelectSlide: (itemIndex, slideIndex) {
           notifier.loadOrderItem(itemIndex, slideIndex: slideIndex);
         },
+        onSlideAction: _SlideGridActions(notifier: notifier),
       );
     }
 
@@ -71,6 +72,7 @@ class _SlideOperatorPanelState extends ConsumerState<SlideOperatorPanel> {
               playback.slideIndex >= 0 ? playback.slideIndex : null,
           resolveText: resolver.resolveText,
           onSelectSlide: notifier.goToSlide,
+          onSlideAction: _SlideGridActions(notifier: notifier),
         ),
       ),
     );
@@ -86,6 +88,7 @@ class _OrderSequenceLayout extends StatefulWidget {
     required this.resolveText,
     required this.verticalController,
     required this.onSelectSlide,
+    required this.onSlideAction,
   });
 
   final PlaybackState playback;
@@ -95,6 +98,7 @@ class _OrderSequenceLayout extends StatefulWidget {
   final ResolvedTextStyle Function(SlideElement) resolveText;
   final ScrollController verticalController;
   final void Function(int itemIndex, int slideIndex) onSelectSlide;
+  final _SlideGridActions onSlideAction;
 
   @override
   State<_OrderSequenceLayout> createState() => _OrderSequenceLayoutState();
@@ -127,17 +131,21 @@ class _OrderSequenceLayoutState extends State<_OrderSequenceLayout> {
         separatorBuilder: (_, __) => const SizedBox(height: 24),
         itemBuilder: (context, itemIndex) {
           final item = order.items[itemIndex];
+          final isActiveHymn = widget.playback.currentPath == item.filePath;
           SubFile sub;
-          try {
-            sub = widget.subIo.readFile(item.filePath);
-          } catch (_) {
-            return _HymnTitle(title: item.title, error: '파일을 읽을 수 없습니다');
+          if (isActiveHymn && widget.playback.currentSub != null) {
+            sub = widget.playback.currentSub!;
+          } else {
+            try {
+              sub = widget.subIo.readFile(item.filePath);
+            } catch (_) {
+              return _HymnTitle(title: item.title, error: '파일을 읽을 수 없습니다');
+            }
           }
           if (sub.slides.isEmpty) {
             return _HymnTitle(title: sub.title, error: '슬라이드 없음');
           }
 
-          final isActiveHymn = widget.playback.currentPath == item.filePath;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -157,6 +165,7 @@ class _OrderSequenceLayoutState extends State<_OrderSequenceLayout> {
                 resolveText: widget.resolveText,
                 onSelectSlide: (slideIndex) =>
                     widget.onSelectSlide(itemIndex, slideIndex),
+                onSlideAction: widget.onSlideAction,
               ),
             ],
           );
@@ -214,6 +223,7 @@ class _SlideGrid extends StatelessWidget {
     required this.liveSlideIndex,
     required this.resolveText,
     required this.onSelectSlide,
+    required this.onSlideAction,
   });
 
   final SubFile sub;
@@ -221,6 +231,7 @@ class _SlideGrid extends StatelessWidget {
   final int? liveSlideIndex;
   final ResolvedTextStyle Function(SlideElement) resolveText;
   final ValueChanged<int> onSelectSlide;
+  final _SlideGridActions onSlideAction;
 
   @override
   Widget build(BuildContext context) {
@@ -248,12 +259,13 @@ class _SlideGrid extends StatelessWidget {
           itemCount: sub.slides.length,
           itemBuilder: (context, index) {
             final slideNumber = index + 1;
+            final slide = sub.slides[index];
             final isLive = liveSlideIndex == index;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '[$slideNumber]',
+                  formatSlideLabel(slideNumber, slide.tag),
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: isLive ? FontWeight.bold : FontWeight.w500,
                         color: isLive
@@ -269,10 +281,16 @@ class _SlideGrid extends StatelessWidget {
                   child: SizedBox(
                     width: double.infinity,
                     child: _SlideThumb(
-                    slide: sub.slides[index],
-                    isLive: isLive,
-                    resolveText: resolveText,
-                    onTap: () => onSelectSlide(index),
+                      slide: slide,
+                      isLive: isLive,
+                      resolveText: resolveText,
+                      onTap: () => onSelectSlide(index),
+                      onSecondaryTap: (details) => onSlideAction.showContextMenu(
+                        context: context,
+                        globalPosition: details.globalPosition,
+                        slideIndex: index,
+                        onBeforeAction: () => onSelectSlide(index),
+                      ),
                     ),
                   ),
                 ),
@@ -291,6 +309,7 @@ class _SlideThumb extends StatelessWidget {
     required this.isLive,
     required this.resolveText,
     required this.onTap,
+    required this.onSecondaryTap,
   });
 
   static const _outerPadding = 6.0;
@@ -300,6 +319,7 @@ class _SlideThumb extends StatelessWidget {
   final bool isLive;
   final ResolvedTextStyle Function(SlideElement) resolveText;
   final VoidCallback onTap;
+  final void Function(TapDownDetails details) onSecondaryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -338,6 +358,7 @@ class _SlideThumb extends StatelessWidget {
             elevation: isLive ? 2 : 0,
             child: InkWell(
               onTap: onTap,
+              onSecondaryTapDown: onSecondaryTap,
               child: AspectRatio(
                 aspectRatio: AspectRatioFhd.aspectRatio,
                 child: ColoredBox(
@@ -384,6 +405,199 @@ class _AlwaysVisibleScrollbarBehavior extends MaterialScrollBehavior {
       controller: details.controller,
       thumbVisibility: true,
       child: child,
+    );
+  }
+}
+
+class _SlideGridActions {
+  const _SlideGridActions({required this.notifier});
+
+  final PlaybackNotifier notifier;
+
+  Future<void> showContextMenu({
+    required BuildContext context,
+    required Offset globalPosition,
+    required int slideIndex,
+    required VoidCallback onBeforeAction,
+  }) async {
+    onBeforeAction();
+
+    await showDialog<void>(
+      context: context,
+      barrierColor: Colors.transparent,
+      useRootNavigator: true,
+      builder: (ctx) => _SlideContextMenu(
+        position: globalPosition,
+        onDuplicate: () {
+          Navigator.pop(ctx);
+          notifier.duplicateSlideAfter(slideIndex);
+        },
+        onDelete: () {
+          Navigator.pop(ctx);
+          notifier.deleteSlideAt(slideIndex);
+        },
+        onSetTag: (tag) {
+          Navigator.pop(ctx);
+          notifier.setSlideTag(slideIndex, tag);
+        },
+      ),
+    );
+  }
+}
+
+class _SlideContextMenu extends StatefulWidget {
+  const _SlideContextMenu({
+    required this.position,
+    required this.onDuplicate,
+    required this.onDelete,
+    required this.onSetTag,
+  });
+
+  final Offset position;
+  final VoidCallback onDuplicate;
+  final VoidCallback onDelete;
+  final void Function(String? tag) onSetTag;
+
+  @override
+  State<_SlideContextMenu> createState() => _SlideContextMenuState();
+}
+
+class _SlideContextMenuState extends State<_SlideContextMenu> {
+  static const _menuWidth = 168.0;
+  static const _rowHeight = 36.0;
+  static const _tagRowIndex = 2;
+
+  bool _tagHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      behavior: HitTestBehavior.translucent,
+      child: Stack(
+        children: [
+          Positioned(
+            left: widget.position.dx,
+            top: widget.position.dy,
+            child: GestureDetector(
+              onTap: () {},
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(8),
+                color: colorScheme.surfaceContainerHigh,
+                child: SizedBox(
+                  width: _menuWidth,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _ContextMenuAction(
+                        label: '복사(복제)',
+                        onSelected: widget.onDuplicate,
+                      ),
+                      _ContextMenuAction(
+                        label: '삭제',
+                        onSelected: widget.onDelete,
+                      ),
+                      MouseRegion(
+                        onEnter: (_) => setState(() => _tagHovered = true),
+                        onExit: (_) => setState(() => _tagHovered = false),
+                        child: SizedBox(
+                          height: _rowHeight,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Tag',
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 18,
+                                  color: colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          if (_tagHovered)
+            Positioned(
+              left: widget.position.dx + _menuWidth - 4,
+              top: widget.position.dy + _tagRowIndex * _rowHeight,
+              child: MouseRegion(
+                onEnter: (_) => setState(() => _tagHovered = true),
+                onExit: (_) => setState(() => _tagHovered = false),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: BorderRadius.circular(8),
+                  color: colorScheme.surfaceContainerHigh,
+                  child: IntrinsicWidth(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...kSlideTags.map(
+                          (tag) => _ContextMenuAction(
+                            label: tag,
+                            onSelected: () => widget.onSetTag(tag),
+                          ),
+                        ),
+                        const Divider(height: 1),
+                        _ContextMenuAction(
+                          label: '지우기',
+                          onSelected: () => widget.onSetTag(null),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ContextMenuAction extends StatelessWidget {
+  const _ContextMenuAction({
+    required this.label,
+    required this.onSelected,
+  });
+
+  final String label;
+  final VoidCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onSelected,
+      child: SizedBox(
+        height: 36,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              label,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -15,6 +15,14 @@ const kCanvasFontFallbacks = [
 
 double canvasFontScale(double canvasWidth) => canvasWidth / 1920;
 
+/// 텍스트 요소의 (x, y) 기준점. [center]만 중심, 그 외는 왼쪽 상단.
+bool isCenterAnchored(String? anchor) => anchor == 'center';
+
+Offset anchorFractionalTranslation(String? anchor) {
+  if (isCenterAnchored(anchor)) return const Offset(-0.5, -0.5);
+  return Offset.zero;
+}
+
 TextAlign canvasTextAlign(String? value) {
   switch (value) {
     case 'left':
@@ -122,11 +130,16 @@ Rect textElementScreenRect({
     style: style,
     canvasWidth: canvasWidth,
   );
-  final cx = element.x / 100 * canvasWidth;
-  final cy = element.y / 100 * canvasHeight;
-  return Rect.fromCenter(
-    center: Offset(cx, cy),
-    width: math.max(size.width, 1),
-    height: math.max(size.height, 1),
-  );
+  final px = element.x / 100 * canvasWidth;
+  final py = element.y / 100 * canvasHeight;
+  final width = math.max(size.width, 1.0);
+  final height = math.max(size.height, 1.0);
+  if (isCenterAnchored(element.anchor)) {
+    return Rect.fromCenter(
+      center: Offset(px, py),
+      width: width,
+      height: height,
+    );
+  }
+  return Rect.fromLTWH(px, py, width, height);
 }

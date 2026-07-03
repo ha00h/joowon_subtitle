@@ -40,11 +40,11 @@ class SubFile {
           SlideElement(
             id: 'text-${lines.first.hashCode}',
             type: SlideElementType.text,
-            x: 50,
-            y: 50,
+            x: 8,
+            y: 10,
             zIndex: 1,
             lines: lines,
-            anchor: 'center',
+            anchor: 'topLeft',
           ),
         ],
       );

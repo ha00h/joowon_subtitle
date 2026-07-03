@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.joowon" "\0"
-            VALUE "FileDescription", "joowon_subtitle" "\0"
+            VALUE "FileDescription", "\uc8fc\uc6d0 \uc1a1\ucd9c" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "joowon_subtitle" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.joowon. All rights reserved." "\0"
             VALUE "OriginalFilename", "joowon_subtitle.exe" "\0"
-            VALUE "ProductName", "joowon_subtitle" "\0"
+            VALUE "ProductName", "\uc8fc\uc6d0 \uc1a1\ucd9c" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

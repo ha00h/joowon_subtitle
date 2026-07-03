@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'constants/app_branding.dart';
 import 'constants/operator_theme.dart';
 import 'models/playback_sync_payload.dart';
 import 'models/window_args.dart';
@@ -126,7 +127,7 @@ class JoowonSubtitleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Joowon Subtitle',
+      title: kAppDisplayName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

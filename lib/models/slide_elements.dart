@@ -2,6 +2,22 @@ enum SlideElementType { text, image, shape }
 
 enum ShapeType { rect, ellipse, line }
 
+/// 슬라이드 구간 태그 (우클릭 메뉴)
+const kSlideTags = [
+  '1절',
+  '2절',
+  '3절',
+  '후렴구1',
+  '후렴구2',
+  '반복',
+];
+
+String formatSlideLabel(int slideNumber, String? tag) {
+  final base = '[$slideNumber]';
+  if (tag != null && tag.isNotEmpty) return '$base $tag';
+  return base;
+}
+
 class SlideElement {
   const SlideElement({
     required this.id,
@@ -218,19 +234,33 @@ class SlideElement {
 }
 
 class Slide {
-  const Slide({required this.elements});
+  const Slide({required this.elements, this.tag});
 
   final List<SlideElement> elements;
+  final String? tag;
 
   factory Slide.fromJson(Map<String, dynamic> json) {
     final list = (json['elements'] as List<dynamic>? ?? [])
         .cast<Map<String, dynamic>>();
     return Slide(
       elements: list.map(SlideElement.fromJson).toList(),
+      tag: json['tag'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'elements': elements.map((e) => e.toJson()).toList(),
+        if (tag != null) 'tag': tag,
       };
+
+  Slide copyWith({
+    List<SlideElement>? elements,
+    String? tag,
+    bool clearTag = false,
+  }) {
+    return Slide(
+      elements: elements ?? this.elements,
+      tag: clearTag ? null : (tag ?? this.tag),
+    );
+  }
 }

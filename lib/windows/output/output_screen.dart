@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/app_branding.dart';
 import '../../models/slide_elements.dart';
 import '../../providers/output_playback_provider.dart';
 import '../../widgets/canvas/canvas_renderer.dart';
@@ -60,7 +61,7 @@ class OutputApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Joowon Subtitle — Output',
+      title: kAppOutputWindowTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,

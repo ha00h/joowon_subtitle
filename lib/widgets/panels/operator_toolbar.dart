@@ -8,6 +8,7 @@ class OperatorToolbar extends ConsumerWidget {
   const OperatorToolbar({
     required this.onPickWorkspace,
     required this.onOpenSettings,
+    required this.onExit,
     required this.onToggleOutput,
     required this.onImportFile,
     required this.onImportClipboard,
@@ -18,6 +19,7 @@ class OperatorToolbar extends ConsumerWidget {
 
   final VoidCallback onPickWorkspace;
   final VoidCallback onOpenSettings;
+  final VoidCallback onExit;
   final VoidCallback onToggleOutput;
   final VoidCallback onImportFile;
   final VoidCallback onImportClipboard;
@@ -110,6 +112,11 @@ class OperatorToolbar extends ConsumerWidget {
                     icon: Icons.settings,
                     label: 'setting',
                     onPressed: onOpenSettings,
+                  ),
+                  _ToolbarButton(
+                    icon: Icons.close,
+                    label: '닫기',
+                    onPressed: onExit,
                   ),
                 ],
               ),

@@ -286,11 +286,14 @@ class StyleFile {
     final text = TextStyleConfig.fromJson(json['text'] as Map<String, dynamic>);
     final regionsJson = json['textRegions'] as List<dynamic>?;
     final regions = regionsJson != null
-        ? regionsJson
-            .cast<Map<String, dynamic>>()
-            .map(TextRegionConfig.fromJson)
-            .toList()
-        : _legacyRegions(text.defaultPosition);
+        ? _normalizeRegions(
+            regionsJson
+                .cast<Map<String, dynamic>>()
+                .map(TextRegionConfig.fromJson)
+                .toList(),
+            text.defaultPosition,
+          )
+        : _bodyOnlyRegions(text.defaultPosition);
 
     return StyleFile(
       name: json['name'] as String,
@@ -306,16 +309,21 @@ class StyleFile {
     );
   }
 
-  static List<TextRegionConfig> _legacyRegions(({double x, double y}) pos) {
+  static List<TextRegionConfig> _normalizeRegions(
+    List<TextRegionConfig> regions,
+    ({double x, double y}) pos,
+  ) {
+    final body = regions.cast<TextRegionConfig?>().firstWhere(
+          (r) => r!.id == 'body',
+          orElse: () => null,
+        );
+    if (body != null) return [body];
+    if (regions.length == 1) return regions;
+    return _bodyOnlyRegions(pos);
+  }
+
+  static List<TextRegionConfig> _bodyOnlyRegions(({double x, double y}) pos) {
     return [
-      const TextRegionConfig(
-        id: 'title',
-        label: '제목',
-        x: 50,
-        y: 22,
-        width: 80,
-        height: 18,
-      ),
       TextRegionConfig(
         id: 'body',
         label: '본문',
@@ -383,8 +391,9 @@ class StyleFile {
           fontWeight: 700,
           color: '#FFFFFF',
           textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
-          defaultPosition: (x: 50, y: 50),
+          defaultPosition: (x: 8, y: 10),
+          textAlign: 'left',
         ),
-        textRegions: _legacyRegions((x: 50, y: 55)),
+        textRegions: _bodyOnlyRegions((x: 8, y: 10)),
       );
 }

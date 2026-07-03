@@ -133,17 +133,58 @@ class OutputWindowNotifier extends Notifier<OutputWindowState> {
   }
 
   Future<void> closeOutputWindow() async {
+    await _closeOutputWindows(reconnectAfterClose: true);
+  }
+
+  /// 앱 종료 시 송출 창을 닫고 자동 재연결을 비활성화한다.
+  Future<void> closeAllForShutdown() async {
+    await _closeOutputWindows(reconnectAfterClose: false);
+  }
+
+  Future<void> _closeOutputWindows({required bool reconnectAfterClose}) async {
     state = state.copyWith(autoReconnectEnabled: false);
-    await _controller?.closeWindow();
+
+    final controllers = <WindowController>{};
+    if (_controller != null) {
+      controllers.add(_controller!);
+    }
+
+    try {
+      final windows = await WindowController.getAll();
+      for (final window in windows) {
+        if (WindowArgs.decode(window.arguments).isOutput) {
+          controllers.add(window);
+        }
+      }
+    } catch (_) {
+      // ignore
+    }
+
+    await Future.wait(
+      controllers.map(_closeWindowWithTimeout),
+      eagerError: false,
+    );
+
     _controller = null;
     PlaybackSyncService.attachOutput(null);
     ref.read(playbackProvider.notifier).resetOutputModes();
     state = state.copyWith(
       isOpen: false,
       clearWindowId: true,
-      autoReconnectEnabled: true,
+      autoReconnectEnabled: reconnectAfterClose,
     );
-    await Future<void>.delayed(const Duration(milliseconds: 400));
+
+    if (reconnectAfterClose) {
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+    }
+  }
+
+  Future<void> _closeWindowWithTimeout(WindowController controller) async {
+    try {
+      await controller.closeWindow().timeout(const Duration(seconds: 2));
+    } catch (_) {
+      // ignore — 종료 흐름은 계속 진행
+    }
   }
 
   Future<void> reopenOnMonitorChange() async {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../constants/app_branding.dart';
 import '../constants/operator_theme.dart';
 import '../models/window_args.dart';
 import '../services/monitor_service.dart';
@@ -32,7 +33,7 @@ Future<void> configureOutputWindow({
   );
 
   await windowManager.setBounds(bounds);
-  await windowManager.setTitle('Joowon Subtitle — Output');
+  await windowManager.setTitle(kAppOutputWindowTitle);
   await windowManager.setFullScreen(true);
   await windowManager.show();
 }
@@ -52,7 +53,7 @@ Future<void> configureOperatorWindow() async {
       await windowManager.focus();
     },
   );
-  await windowManager.setTitle('Joowon Subtitle');
+  await windowManager.setTitle(kAppDisplayName);
 }
 
 /// WindowController 커스텀 메서드 (close, updatePlayback 등)

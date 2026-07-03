@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/import_flow.dart';
+import '../../services/app_shutdown.dart';
 import '../../services/workspace_picker.dart';
 
 import '../../services/workspace_scanner.dart';
@@ -134,6 +137,7 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
                             builder: (_) => const SettingsScreen(),
                           ),
                         ),
+                        onExit: () => unawaited(shutdownApplication(ref)),
                         onImportFile: () => ref
                             .read(importFlowProvider)
                             .importFromFile(context, ref),
@@ -225,6 +229,7 @@ const _shortcuts = <ShortcutActivator, Intent>{
   SingleActivator(LogicalKeyboardKey.digit8): DigitIntent('8'),
   SingleActivator(LogicalKeyboardKey.digit9): DigitIntent('9'),
   SingleActivator(LogicalKeyboardKey.digit0): DigitIntent('0'),
+  SingleActivator(LogicalKeyboardKey.delete): DeleteSlideIntent(),
 };
 
 Map<Type, Action<Intent>> _buildActions(WidgetRef ref) {
@@ -266,6 +271,12 @@ Map<Type, Action<Intent>> _buildActions(WidgetRef ref) {
         return null;
       },
     ),
+    DeleteSlideIntent: CallbackAction<DeleteSlideIntent>(
+      onInvoke: (_) {
+        playback.deleteSlide();
+        return null;
+      },
+    ),
   };
 }
 
@@ -292,6 +303,10 @@ class CommitDigitIntent extends Intent {
 class DigitIntent extends Intent {
   const DigitIntent(this.digit);
   final String digit;
+}
+
+class DeleteSlideIntent extends Intent {
+  const DeleteSlideIntent();
 }
 
 class _AlwaysVisibleScrollbarBehavior extends MaterialScrollBehavior {
