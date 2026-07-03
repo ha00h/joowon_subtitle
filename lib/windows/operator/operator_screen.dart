@@ -12,6 +12,8 @@ import '../../providers/playback_provider.dart';
 import '../../providers/settings_provider.dart';
 import '../../providers/style_provider.dart';
 import '../../providers/workspace_provider.dart';
+import '../../providers/update_provider.dart';
+import '../../widgets/dialogs/update_available_dialog.dart';
 import '../../widgets/panels/operator_status_bar.dart';
 import '../../widgets/panels/operator_toolbar.dart';
 import '../../widgets/panels/slide_operator_panel.dart';
@@ -72,6 +74,15 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
     if (!ref.read(outputWindowProvider).isOpen) {
       await ref.read(outputWindowProvider.notifier).openOutputWindow();
     }
+
+    _scheduleAutomaticUpdateCheck();
+  }
+
+  void _scheduleAutomaticUpdateCheck() {
+    Future<void>.delayed(const Duration(seconds: 4), () async {
+      if (!mounted) return;
+      await ref.read(updateProvider.notifier).checkAutomatic();
+    });
   }
 
   Future<void> _toggleOutputWindow(WidgetRef ref) async {
@@ -85,6 +96,16 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(updateProvider, (previous, next) {
+      if (!next.pendingDialog || next.release == null || !mounted) return;
+      ref.read(updateProvider.notifier).clearPendingDialog();
+      showUpdateAvailableDialog(
+        context,
+        ref,
+        release: next.release!,
+      );
+    });
+
     ref.listen(activeStyleFileProvider, (_, __) {
       ref.read(outputWindowProvider.notifier).syncPlaybackIfOpen();
     });

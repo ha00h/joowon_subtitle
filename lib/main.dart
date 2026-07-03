@@ -18,6 +18,7 @@ import 'services/security_scoped_access.dart';
 import 'services/window_setup.dart';
 import 'windows/operator/operator_screen.dart';
 import 'windows/output/output_screen.dart';
+import 'widgets/common/operator_window_lifecycle.dart';
 
 Future<void> bootstrap({required bool isOutput}) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -136,7 +137,7 @@ class JoowonSubtitleApp extends StatelessWidget {
         scaffoldBackgroundColor: OperatorTheme.background,
         useMaterial3: true,
       ),
-      home: const OperatorScreen(),
+      home: const OperatorWindowLifecycle(child: OperatorScreen()),
     );
   }
 }

@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/workspace_picker.dart';
 import '../../providers/output_window_provider.dart';
+import '../../providers/update_provider.dart';
 import '../../providers/settings_provider.dart';
+import '../../widgets/dialogs/update_available_dialog.dart';
 import '../../providers/style_provider.dart';
 import '../../providers/workspace_provider.dart';
 
@@ -15,6 +17,7 @@ class SettingsScreen extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final styleState = ref.watch(styleProvider);
     final monitorsAsync = ref.watch(monitorsProvider);
+    final updateState = ref.watch(updateProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('설정')),
@@ -116,9 +119,62 @@ class SettingsScreen extends ConsumerWidget {
               ref.read(outputWindowProvider.notifier).syncPlaybackIfOpen();
             },
           ),
+          const Divider(),
+          ListTile(
+            title: const Text('앱 버전'),
+            subtitle: Text(_updateStatusText(updateState)),
+            trailing: updateState.status == UpdateStatus.checking
+                ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : FilledButton.tonal(
+                    onPressed: () => _checkForUpdate(context, ref),
+                    child: const Text('업데이트 확인'),
+                  ),
+          ),
         ],
       ),
     );
+  }
+
+  String _updateStatusText(UpdateState state) {
+    final current = state.currentVersion ?? '…';
+    return switch (state.status) {
+      UpdateStatus.available =>
+        '현재 v$current · v${state.release!.version} 사용 가능',
+      UpdateStatus.error => '현재 v$current · ${state.errorMessage}',
+      UpdateStatus.checking => '현재 v$current · 확인 중…',
+      _ => '현재 v$current',
+    };
+  }
+
+  Future<void> _checkForUpdate(BuildContext context, WidgetRef ref) async {
+    await ref.read(updateProvider.notifier).checkManual();
+    if (!context.mounted) return;
+
+    final updateState = ref.read(updateProvider);
+    if (updateState.status == UpdateStatus.available &&
+        updateState.release != null) {
+      await showUpdateAvailableDialog(
+        context,
+        ref,
+        release: updateState.release!,
+      );
+      return;
+    }
+
+    final message = switch (updateState.status) {
+      UpdateStatus.upToDate => '최신 버전입니다.',
+      UpdateStatus.error => updateState.errorMessage ?? '업데이트 확인에 실패했습니다.',
+      _ => null,
+    };
+    if (message != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
   }
 
   Future<void> _pickWorkspace(WidgetRef ref) async {
