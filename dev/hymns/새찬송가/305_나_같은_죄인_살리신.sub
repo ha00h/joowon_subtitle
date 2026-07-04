@@ -1,0 +1,135 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "나 같은 죄인 살리신",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "c1a264bf-9b7d-4e38-9ff3-dd429675ea99",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "나 같은 죄인 살리신 주 은혜 놀라워",
+            "잃었던 생명 찾았고 광명을 얻었네"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "1절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "4fff5a72-eaf1-4c81-a389-0b72951a1971",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "큰 죄악에서 건지신 주 은혜 고마워",
+            "나 처음 믿은 그 시간 귀하고 귀하다"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "2절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "c88c5a89-564b-4fc1-973e-4f26db824b95",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "이제껏 내가 산 것도 주님의 은혜라",
+            "또 나를 장차 본향에 인도해 주시리"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "3절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "7b01d4e2-6249-454a-8473-8856effce030",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "거기서 우리 영원히 주님의 은혜로",
+            "해처럼 밝게 살면서 주 찬양 하리라 아멘"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "4절"
+    }
+  ]
+}

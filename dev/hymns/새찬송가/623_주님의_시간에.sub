@@ -1,0 +1,131 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "주님의 시간에",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "1e132aa5-676a-4bb3-911a-03d73fcc558e",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주님의 시간에 아름답게 모든 것 변하리",
+            "주님 나의 갈 길을 인도하여 주시니"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "1절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "e05f913a-9d39-4c41-89e6-b6e436ca8c84",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주의 뜻을 따라서 살리라"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "c9bf7aa4-7f59-4eea-8370-dc45e3329528",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주님의 시간에 아름답게 모든 것 변하리",
+            "나의 정성 다하여 주를 찬송하오니"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "2절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "70732928-071d-4203-8845-8091aafa3644",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주의 뜻을 이루어 주소서"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

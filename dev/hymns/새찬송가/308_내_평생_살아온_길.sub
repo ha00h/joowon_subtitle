@@ -1,0 +1,196 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "내 평생 살아온 길",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "a89773c6-fb35-498b-9adc-7959183943f8",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "내 평생 살아온 길 뒤를 돌아 보오니",
+            "걸음마다 자국마다 모두 죄 뿐입니다"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "1절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "3c23722b-5790-44d8-8d00-0f0a1d5eec68",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "우리 죄를 사하신 주의 은혜 크시니",
+            "골고다의 언덕 길 주님 바라봅니다"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "5c03e0c8-11b3-471e-bd14-f79ce98d7d87",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "나 같이 못난 인간 주님께서 살리려",
+            "하늘나라 영광 보좌 모두 버리시었네"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "2절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "7fb214c2-b6df-44ba-9106-9e8c93b7f8f3",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "낮고 낮은 세상의 사람 형상 입으신",
+            "하나님의 큰 사랑 어디에 다 견주리"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "3f7ede57-dd6b-4bdc-9dd8-06f6cbdb64fe",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "예수님 나의 주님 사랑의 주 하나님",
+            "이제 나는 예수님만 높이면서 살겠네"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "3절"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "e3113592-ff8c-4b06-ae58-3a31a5fc9adb",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "나의 남은 인생을 주와 동행하면서",
+            "주님 사랑 전하며 말씀 따라 살겠네"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

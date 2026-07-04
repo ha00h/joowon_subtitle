@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/playback_provider.dart';
+import '../../utils/keyboard_focus.dart';
 
 const operatorKeyboardShortcuts = <ShortcutActivator, Intent>{
   SingleActivator(LogicalKeyboardKey.arrowDown): NextSlideIntent(),
@@ -32,49 +33,44 @@ const operatorKeyboardShortcuts = <ShortcutActivator, Intent>{
 Map<Type, Action<Intent>> buildOperatorKeyboardActions(WidgetRef ref) {
   final playback = ref.read(playbackProvider.notifier);
   return {
-    NextSlideIntent: CallbackAction<NextSlideIntent>(
-      onInvoke: (_) {
-        playback.nextSlide();
-        return null;
-      },
+    NextSlideIntent: _OperatorAction<NextSlideIntent>(
+      onInvoke: (_) => playback.nextSlide(),
     ),
-    PreviousSlideIntent: CallbackAction<PreviousSlideIntent>(
-      onInvoke: (_) {
-        playback.previousSlide();
-        return null;
-      },
+    PreviousSlideIntent: _OperatorAction<PreviousSlideIntent>(
+      onInvoke: (_) => playback.previousSlide(),
     ),
-    ToggleBlankIntent: CallbackAction<ToggleBlankIntent>(
-      onInvoke: (_) {
-        playback.toggleBlank();
-        return null;
-      },
+    ToggleBlankIntent: _OperatorAction<ToggleBlankIntent>(
+      onInvoke: (_) => playback.toggleBlank(),
     ),
-    GoHomeIntent: CallbackAction<GoHomeIntent>(
-      onInvoke: (_) {
-        playback.goHome();
-        return null;
-      },
+    GoHomeIntent: _OperatorAction<GoHomeIntent>(
+      onInvoke: (_) => playback.goHome(),
     ),
-    CommitDigitIntent: CallbackAction<CommitDigitIntent>(
-      onInvoke: (_) {
-        playback.commitDigitBuffer();
-        return null;
-      },
+    CommitDigitIntent: _OperatorAction<CommitDigitIntent>(
+      onInvoke: (_) => playback.commitDigitBuffer(),
     ),
-    DigitIntent: CallbackAction<DigitIntent>(
-      onInvoke: (intent) {
-        playback.appendDigit(intent.digit);
-        return null;
-      },
+    DigitIntent: _OperatorAction<DigitIntent>(
+      onInvoke: (intent) => playback.appendDigit(intent.digit),
     ),
-    DeleteSlideIntent: CallbackAction<DeleteSlideIntent>(
-      onInvoke: (_) {
-        playback.deleteSlide();
-        return null;
-      },
+    DeleteSlideIntent: _OperatorAction<DeleteSlideIntent>(
+      onInvoke: (_) => playback.deleteSlide(),
     ),
   };
+}
+
+/// 텍스트 입력 포커스 시 비활성화 → 검색창 입력과 단축키 공존
+class _OperatorAction<T extends Intent> extends Action<T> {
+  _OperatorAction({required this.onInvoke});
+
+  final void Function(T intent) onInvoke;
+
+  @override
+  bool isEnabled(T intent) => !isTextInputFocused();
+
+  @override
+  Object? invoke(T intent) {
+    onInvoke(intent);
+    return null;
+  }
 }
 
 class NextSlideIntent extends Intent {

@@ -1,0 +1,38 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "우리 기도를",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "4fa82da3-402d-419e-bc42-d4a834c52376",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "우리 기도를 들어 주시고",
+            "주님의 평화를 내려 주소서 아멘"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

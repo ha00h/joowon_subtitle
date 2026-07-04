@@ -17,15 +17,8 @@ class WorkspaceState {
   final String query;
 
   List<SubFileEntry> get filteredEntries {
-    if (query.trim().isEmpty) return entries;
-    final q = query.toLowerCase();
-    return entries
-        .where(
-          (e) =>
-              e.title.toLowerCase().contains(q) ||
-              e.relativePath.toLowerCase().contains(q),
-        )
-        .toList();
+    if (rootPath == null) return const [];
+    return WorkspaceScanner().search(entries, query);
   }
 
   WorkspaceState copyWith({
@@ -64,7 +57,6 @@ class WorkspaceNotifier extends Notifier<WorkspaceState> {
       state = const WorkspaceState();
       return;
     }
-    if (path == state.rootPath && state.entries.isNotEmpty) return;
     final entries = _scanner.scanSubFiles(path);
     state = WorkspaceState(
       rootPath: path,

@@ -1,0 +1,38 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "진리와 생명 되신 주",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "4cff6df5-e49a-487f-b13a-f0fd3a68dcdd",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "진리와 생명 되신 주 이 몸을 바치옵니다",
+            "믿음과 소망 사랑에 한마음 되게 하소서 아멘"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
+import '../utils/natural_compare.dart';
 import 'sub_io.dart';
 
 class SubFileEntry {
@@ -14,6 +15,31 @@ class SubFileEntry {
   final String path;
   final String title;
   final String relativePath;
+
+  /// 파일명 앞자리 번호 (예: `001_만복의_근원_하나님.sub` → 1)
+  int? get hymnNumber {
+    final base = p.basenameWithoutExtension(relativePath);
+    final match = RegExp(r'^(\d+)').firstMatch(base);
+    if (match == null) return null;
+    return int.parse(match.group(1)!);
+  }
+
+  String get listTitle {
+    final number = hymnNumber;
+    if (number == null) return title;
+    return '$number. $title';
+  }
+
+  String get searchHaystack {
+    final parts = <String>[title, relativePath];
+    final number = hymnNumber;
+    if (number != null) {
+      parts
+        ..add(number.toString())
+        ..add(number.toString().padLeft(3, '0'));
+    }
+    return parts.join('\n').toLowerCase();
+  }
 }
 
 class WorkspaceScanner {
@@ -50,18 +76,24 @@ class WorkspaceScanner {
     } on FileSystemException {
       return [];
     }
-    results.sort((a, b) => a.title.compareTo(b.title));
+    results.sort(
+      (a, b) => naturalCompare(a.relativePath, b.relativePath),
+    );
     return results;
   }
 
   List<SubFileEntry> search(List<SubFileEntry> entries, String query) {
-    if (query.trim().isEmpty) return entries;
-    final q = query.toLowerCase();
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) return entries;
+
+    final tokens = trimmed
+        .toLowerCase()
+        .split(RegExp(r'\s+'))
+        .where((token) => token.isNotEmpty);
+
     return entries
         .where(
-          (e) =>
-              e.title.toLowerCase().contains(q) ||
-              e.relativePath.toLowerCase().contains(q),
+          (entry) => tokens.every(entry.searchHaystack.contains),
         )
         .toList();
   }

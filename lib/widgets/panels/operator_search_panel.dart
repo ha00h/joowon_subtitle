@@ -7,6 +7,7 @@ import '../../providers/workspace_provider.dart';
 import '../../services/workspace_scanner.dart';
 import '../common/always_visible_scrollbar.dart';
 import 'operator_order_list.dart';
+import 'operator_search_field.dart';
 import 'selectable_item_card.dart';
 
 class OperatorSearchPanel extends ConsumerWidget {
@@ -24,16 +25,27 @@ class OperatorSearchPanel extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
-              decoration: const InputDecoration(
-                hintText: '찬양 검색',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+            child: OperatorSearchField(
+              initialValue: workspace.query,
               onChanged: ref.read(workspaceProvider.notifier).setQuery,
             ),
           ),
+          if (workspace.rootPath != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+              child: Text(
+                workspace.query.trim().isEmpty
+                    ? '찬양 ${workspace.entries.length}곡'
+                    : '검색 ${workspace.filteredEntries.length}곡 / 전체 ${workspace.entries.length}곡',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.6),
+                    ),
+              ),
+            ),
           Expanded(
             flex: 3,
             child: workspace.rootPath == null
@@ -48,7 +60,7 @@ class OperatorSearchPanel extends ConsumerWidget {
                           elevation: 4,
                           child: Padding(
                             padding: const EdgeInsets.all(8),
-                            child: Text(entry.title),
+                            child: Text(entry.listTitle),
                           ),
                         ),
                         childWhenDragging: Opacity(
@@ -62,7 +74,19 @@ class OperatorSearchPanel extends ConsumerWidget {
                                 horizontal: 12,
                                 vertical: 0,
                               ),
-                              title: Text(entry.title),
+                              title: Text(entry.listTitle),
+                            subtitle: Text(
+                              entry.relativePath,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.55),
+                              ),
+                            ),
                             ),
                           ),
                         ),
@@ -75,7 +99,19 @@ class OperatorSearchPanel extends ConsumerWidget {
                               horizontal: 12,
                               vertical: 0,
                             ),
-                            title: Text(entry.title),
+                            title: Text(entry.listTitle),
+                            subtitle: Text(
+                              entry.relativePath,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.55),
+                              ),
+                            ),
                             onTap: () => ref
                                 .read(playbackProvider.notifier)
                                 .loadSub(entry.path),

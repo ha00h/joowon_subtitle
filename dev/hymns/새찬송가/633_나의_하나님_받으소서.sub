@@ -1,0 +1,38 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "나의 하나님 받으소서",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "e556e622-cd7f-4484-bfba-a467527a3f22",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "나의 하나님 받으소서 주께 드리는 이 예물을",
+            "소리 높여 감사로 주께 드리네 아멘"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

@@ -30,6 +30,18 @@ class OperatorScreen extends ConsumerStatefulWidget {
 }
 
 class _OperatorScreenState extends ConsumerState<OperatorScreen> {
+  final _playbackFocusNode = FocusNode(debugLabel: 'playback');
+
+  @override
+  void dispose() {
+    _playbackFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _focusPlaybackArea() {
+    _playbackFocusNode.requestFocus();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -116,6 +128,7 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
       child: Actions(
         actions: buildOperatorKeyboardActions(ref),
         child: Focus(
+          focusNode: _playbackFocusNode,
           autofocus: true,
           child: Scaffold(
             body: Row(
@@ -124,45 +137,48 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
                 const SizedBox(width: 300, child: OperatorSearchPanel()),
                 const VerticalDivider(width: 1),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      OperatorToolbar(
-                        onToggleOutput: () => _toggleOutputWindow(ref),
-                        onPickWorkspace: () => _pickWorkspaceFolder(ref),
-                        onOpenSettings: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const SettingsScreen(),
-                          ),
-                        ),
-                        onExit: () => unawaited(shutdownApplication(ref)),
-                        onImportFile: () => ref
-                            .read(importFlowProvider)
-                            .importFromFile(context, ref),
-                        onImportClipboard: () => ref
-                            .read(importFlowProvider)
-                            .importFromClipboard(context, ref),
-                        onOpenStyles: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const StyleScreen(),
-                          ),
-                        ),
-                        onOpenEditor: () {
-                          ref
-                              .read(playbackProvider.notifier)
-                              .prepareForSlideEdit();
-                          Navigator.of(context).push(
+                  child: Listener(
+                    onPointerDown: (_) => _focusPlaybackArea(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        OperatorToolbar(
+                          onToggleOutput: () => _toggleOutputWindow(ref),
+                          onPickWorkspace: () => _pickWorkspaceFolder(ref),
+                          onOpenSettings: () => Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => const UnifiedEditorScreen(
-                                mode: UnifiedEditorMode.slide,
-                              ),
+                              builder: (_) => const SettingsScreen(),
                             ),
-                          );
-                        },
-                      ),
-                      const Expanded(child: SlideOperatorPanel()),
-                      const OperatorStatusBar(),
-                    ],
+                          ),
+                          onExit: () => unawaited(shutdownApplication(ref)),
+                          onImportFile: () => ref
+                              .read(importFlowProvider)
+                              .importFromFile(context, ref),
+                          onImportClipboard: () => ref
+                              .read(importFlowProvider)
+                              .importFromClipboard(context, ref),
+                          onOpenStyles: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const StyleScreen(),
+                            ),
+                          ),
+                          onOpenEditor: () {
+                            ref
+                                .read(playbackProvider.notifier)
+                                .prepareForSlideEdit();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const UnifiedEditorScreen(
+                                  mode: UnifiedEditorMode.slide,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        const Expanded(child: SlideOperatorPanel()),
+                        const OperatorStatusBar(),
+                      ],
+                    ),
                   ),
                 ),
               ],

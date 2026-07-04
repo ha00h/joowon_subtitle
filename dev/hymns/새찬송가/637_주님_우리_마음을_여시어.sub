@@ -1,0 +1,38 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "주님 우리 마음을 여시어",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "17ce7bb1-a2eb-4e5e-9682-a70cc040bb1a",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "주님 우리의 마음을 여시어",
+            "말씀을 깨닫게 하옵소서 아멘"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}
