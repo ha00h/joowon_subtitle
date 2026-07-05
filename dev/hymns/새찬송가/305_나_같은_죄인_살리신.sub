@@ -2,12 +2,39 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "나 같은 죄인 살리신",
+  "hymnNumber": 305,
   "slides": [
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "70803ab2-96ea-4e75-9cd8-b623b99b259a",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 305장 1절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "c1a264bf-9b7d-4e38-9ff3-dd429675ea99",
+          "id": "4ba0b671-0a99-4637-bedc-36f3ae3e6a7a",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,8 +65,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "e341255f-fe74-4e0b-ab79-ddc406abb944",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 305장 2절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "4fff5a72-eaf1-4c81-a389-0b72951a1971",
+          "id": "aed126d0-5e3c-4d38-a987-4d5ab4d5c16b",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -70,8 +123,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "1969b4d5-b509-4444-a889-445ac3ab2ee7",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 305장 3절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "c88c5a89-564b-4fc1-973e-4f26db824b95",
+          "id": "aef5d67a-9a57-431e-8835-a8eb47a45adb",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -102,8 +181,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "2f00d43a-102b-4a40-a8a9-e8ed8e6920fc",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 305장 4절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "7b01d4e2-6249-454a-8473-8856effce030",
+          "id": "295e68b8-9421-40ed-986c-616da46847a3",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

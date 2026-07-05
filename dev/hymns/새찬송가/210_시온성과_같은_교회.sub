@@ -2,12 +2,39 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "시온성과 같은 교회",
+  "hymnNumber": 210,
   "slides": [
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "11b6a32c-4304-42ca-acf2-e76f60cb4628",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 210장 1절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "e4e492d0-269f-43a9-9698-8260f564d40f",
+          "id": "d609ca23-dccc-484b-90e3-845f1b7d2b2b",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,8 +65,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "f1f0b2d4-779a-4d2a-a8ec-35cb304eeb7c",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 210장 1절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "0d9c016b-095d-4a0e-a248-f45b9e5c9121",
+          "id": "faf065b4-55e3-4df9-9d34-c3fc4545459c",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -69,8 +122,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "94b0ef7f-533e-40d7-94a3-a4666264db44",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 210장 2절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "de1df1c8-e3c8-4d11-84b8-bac6e7bd82f1",
+          "id": "e75f4214-9aa0-4dc0-99b9-17f7010dc34d",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -101,8 +180,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "b3e88c2d-3915-45ff-ae2e-bc6f1a7632e2",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 210장 2절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "dcdafbc8-a8aa-442c-b52b-c61d9d6281db",
+          "id": "a35ba344-f5a8-4648-90ae-d1eadb36e2d9",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -132,8 +237,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "f1ca4739-6655-43e9-8daf-6f0b3b21340e",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 210장 3절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "6fb97bd4-7c99-4cdb-bfb9-fbbfb59520d0",
+          "id": "4457a42e-1413-4986-9835-6e08ac4e47f7",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -164,8 +295,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "4c6c39dc-7186-4d5e-b72c-a5c32f2c1d3b",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 210장 3절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "90451a8e-63d0-427d-893c-2f7294ea60b5",
+          "id": "dc7adec1-f515-4126-9579-59f3479bab54",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

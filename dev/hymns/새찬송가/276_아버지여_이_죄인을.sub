@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "아버지여 이 죄인을",
+  "hymnNumber": 276,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "9e3d4b76-74aa-449d-8413-ca1ffb61c9e8",
+          "id": "dff46b53-2c7f-4854-a38e-fa59a431fbc5",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "5ae3fdf5-3515-41b9-9ab3-e894beb669c7",
+          "id": "502761a6-f89b-4304-b906-48b061a8259b",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -68,8 +69,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "d89f6486-8ccb-470c-991f-ab27af77f383",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 276장 2절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "cc7be3d5-4d81-41ce-aa5d-b1265a471741",
+          "id": "fc656b3c-cfa9-4e81-b9ec-74597b30ee95",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -100,8 +127,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "688e32ad-cfbd-45c0-9fd0-0343c5af44e4",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 276장 2절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "6cf84c95-a921-43c4-8012-c6ff5e7224f4",
+          "id": "8d8e55ff-a6d2-446c-86a2-07a9cbaa0493",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -131,8 +184,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "fada80a0-107d-4017-9521-389509b2c572",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 276장 3절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "9c192e36-a32a-4c9c-b6a9-72dfdcbb5844",
+          "id": "d7d38e32-c1aa-4eab-96b2-28aba00d633f",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -163,8 +242,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "b5884e3e-54e9-48c2-ab3a-38ea123fa156",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 276장 3절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "87362627-eb6f-4472-9a83-4fc23d6dbc1e",
+          "id": "28022b79-c3d0-4c45-9dca-32314db619f9",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

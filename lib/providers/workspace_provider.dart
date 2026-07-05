@@ -1,8 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path/path.dart' as p;
 
+import '../services/sub_io.dart';
+import '../services/workspace_file_ops.dart' as file_ops;
 import '../services/workspace_scanner.dart';
+import 'order_provider.dart';
+import 'playback_provider.dart';
 import 'settings_provider.dart';
 
 class WorkspaceState {
@@ -36,6 +42,7 @@ class WorkspaceState {
 
 class WorkspaceNotifier extends Notifier<WorkspaceState> {
   final _scanner = WorkspaceScanner();
+  final _subIo = SubIo();
 
   @override
   WorkspaceState build() {
@@ -97,6 +104,40 @@ class WorkspaceNotifier extends Notifier<WorkspaceState> {
     final path = state.rootPath;
     if (path == null) return;
     state = state.copyWith(entries: _scanner.scanSubFiles(path));
+  }
+
+  Future<String?> renameSubFile({
+    required String oldPath,
+    required String newBaseName,
+  }) async {
+    try {
+      final newPath = await file_ops.renameSubFile(
+        oldPath: oldPath,
+        newBaseName: newBaseName,
+      );
+      var sub = _subIo.readFile(newPath);
+      final newTitle = file_ops.titleFromSubBaseName(
+        p.basenameWithoutExtension(newPath),
+      );
+      if (newTitle.isNotEmpty && sub.title != newTitle) {
+        sub = sub.copyWith(title: newTitle);
+        _subIo.writeFile(newPath, sub);
+      }
+      await ref
+          .read(orderProvider.notifier)
+          .renameFileReferences(oldPath, newPath, sub.title);
+      ref.read(playbackProvider.notifier).replacePathIfMatches(
+            oldPath,
+            newPath,
+            newTitle: sub.title,
+          );
+      rescan();
+      return newPath;
+    } on FileSystemException catch (e) {
+      throw FileSystemException(e.message, e.path);
+    } on FormatException catch (e) {
+      throw FormatException(e.message);
+    }
   }
 }
 

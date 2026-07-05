@@ -47,6 +47,35 @@ Color? tryParseHexColor(String hex) {
   }
 }
 
+({int r, int g, int b, int a}) colorToRgb(Color color) {
+  return (
+    r: (color.r * 255).round().clamp(0, 255),
+    g: (color.g * 255).round().clamp(0, 255),
+    b: (color.b * 255).round().clamp(0, 255),
+    a: (color.a * 255).round().clamp(0, 255),
+  );
+}
+
+Color colorFromRgb(int r, int g, int b, {int a = 255}) {
+  return Color.fromARGB(
+    a.clamp(0, 255),
+    r.clamp(0, 255),
+    g.clamp(0, 255),
+    b.clamp(0, 255),
+  );
+}
+
+/// 배경색 위에 읽기 쉬운 전경색
+Color readableOnColor(Color background) {
+  return background.computeLuminance() > 0.55 ? Colors.black87 : Colors.white;
+}
+
+int? parseRgbChannel(String input) {
+  final value = int.tryParse(input.trim());
+  if (value == null || value < 0 || value > 255) return null;
+  return value;
+}
+
 /// 입력 hex를 `#RRGGBB` / `#RRGGBBAA` 형식으로 정규화. 실패 시 null.
 String? normalizeHexColor(String input, {bool allowAlpha = false}) {
   var value = input.trim().replaceFirst('#', '').toUpperCase();

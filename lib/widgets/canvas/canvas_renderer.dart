@@ -56,6 +56,7 @@ class CanvasRenderer extends StatelessWidget {
   Widget _buildElement(SlideElement el, double w, double h) {
     switch (el.type) {
       case SlideElementType.text:
+      case SlideElementType.verseLabel:
         return _buildText(el, w, h);
       case SlideElementType.image:
         return _buildImage(el, w, h);
@@ -67,8 +68,10 @@ class CanvasRenderer extends StatelessWidget {
   Widget _buildText(SlideElement el, double w, double h) {
     final style = resolveText(el);
     final align = canvasTextAlign(style.textAlign);
+    final boxW = el.width != null ? el.width! / 100 * w : null;
+    final boxH = el.height != null ? el.height! / 100 * h : null;
 
-    final content = Column(
+    Widget content = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: columnCrossAxisFor(align),
       children: el.lines!
@@ -82,6 +85,20 @@ class CanvasRenderer extends StatelessWidget {
           )
           .toList(),
     );
+
+    if (boxW != null) {
+      content = SizedBox(width: boxW, child: content);
+    }
+    if (boxH != null) {
+      content = SizedBox(
+        width: boxW,
+        height: boxH,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: content,
+        ),
+      );
+    }
 
     return Positioned(
       left: el.x / 100 * w,

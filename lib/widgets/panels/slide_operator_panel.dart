@@ -9,6 +9,8 @@ import '../../providers/order_provider.dart';
 import '../../providers/playback_provider.dart';
 import '../../providers/style_provider.dart';
 import '../../services/sub_io.dart';
+import '../../utils/color_utils.dart';
+import '../../utils/context_menu_layout.dart';
 import '../canvas/canvas_renderer.dart';
 import '../common/always_visible_scrollbar.dart';
 import '../common/aspect_ratio_fhd.dart';
@@ -265,17 +267,11 @@ class _SlideGrid extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  formatSlideLabel(slideNumber, slide.tag),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: isLive ? FontWeight.bold : FontWeight.w500,
-                        color: isLive
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.7),
-                      ),
+                _SlideLabel(
+                  slideNumber: slideNumber,
+                  tag: slide.tag,
+                  colorTag: slide.colorTag,
+                  isLive: isLive,
                 ),
                 const SizedBox(height: 4),
                 Expanded(
@@ -301,6 +297,67 @@ class _SlideGrid extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class _SlideLabel extends StatelessWidget {
+  const _SlideLabel({
+    required this.slideNumber,
+    required this.tag,
+    required this.colorTag,
+    required this.isLive,
+  });
+
+  static const _horizontalInset = _SlideThumb._outerPadding;
+
+  final int slideNumber;
+  final String? tag;
+  final String? colorTag;
+  final bool isLive;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final label = formatSlideLabel(slideNumber, tag);
+    final bg = colorTag != null ? tryParseHexColor(colorTag!) : null;
+
+    final style = theme.textTheme.titleSmall?.copyWith(
+      fontWeight: isLive ? FontWeight.bold : FontWeight.w500,
+      color: bg != null
+          ? readableOnColor(bg)
+          : (isLive
+              ? theme.colorScheme.primary
+              : theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+    );
+
+    if (bg == null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: _horizontalInset),
+        child: Text(label, style: style),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: _horizontalInset),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(
+              label,
+              style: style,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -433,6 +490,10 @@ class _SlideGridActions {
           Navigator.pop(ctx);
           notifier.setSlideTag(slideIndex, tag);
         },
+        onSetColorTag: (colorTag) {
+          Navigator.pop(ctx);
+          notifier.setSlideColorTag(slideIndex, colorTag);
+        },
       ),
     );
   }
@@ -489,6 +550,7 @@ class _SlideContextMenu extends StatefulWidget {
     required this.onQuickEdit,
     required this.onDelete,
     required this.onSetTag,
+    required this.onSetColorTag,
   });
 
   final Offset position;
@@ -496,21 +558,51 @@ class _SlideContextMenu extends StatefulWidget {
   final VoidCallback onQuickEdit;
   final VoidCallback onDelete;
   final void Function(String? tag) onSetTag;
+  final void Function(String? colorTag) onSetColorTag;
 
   @override
   State<_SlideContextMenu> createState() => _SlideContextMenuState();
 }
 
+enum _SlideSubmenu { none, tag, colorTag }
+
 class _SlideContextMenuState extends State<_SlideContextMenu> {
   static const _menuWidth = 168.0;
   static const _rowHeight = 36.0;
   static const _tagRowIndex = 3;
+  static const _colorTagRowIndex = 4;
+  static const _submenuWidth = 120.0;
+  static const _colorSubmenuWidth = 140.0;
 
-  bool _tagHovered = false;
+  _SlideSubmenu _openSubmenu = _SlideSubmenu.none;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final viewport = MediaQuery.sizeOf(context);
+    final mainMenuHeight = 5 * _rowHeight;
+    final tagSubmenuHeight = (kSlideTags.length + 1) * _rowHeight + 1;
+    final colorSubmenuHeight = (kSlideColorTags.length + 1) * _rowHeight + 1;
+    final submenuWidth = _openSubmenu == _SlideSubmenu.colorTag
+        ? _colorSubmenuWidth
+        : _submenuWidth;
+    final submenuHeight = _openSubmenu == _SlideSubmenu.tag
+        ? tagSubmenuHeight
+        : colorSubmenuHeight;
+    final submenuAnchorTop = switch (_openSubmenu) {
+      _SlideSubmenu.tag => _tagRowIndex * _rowHeight,
+      _SlideSubmenu.colorTag => _colorTagRowIndex * _rowHeight,
+      _SlideSubmenu.none => _tagRowIndex * _rowHeight,
+    };
+    final layout = ContextMenuLayout.resolve(
+      tapPosition: widget.position,
+      viewportSize: viewport,
+      mainMenuWidth: _menuWidth,
+      mainMenuHeight: mainMenuHeight,
+      submenuWidth: submenuWidth,
+      submenuHeight: submenuHeight,
+      submenuAnchorTop: submenuAnchorTop,
+    );
 
     return GestureDetector(
       onTap: () => Navigator.pop(context),
@@ -518,8 +610,8 @@ class _SlideContextMenuState extends State<_SlideContextMenu> {
       child: Stack(
         children: [
           Positioned(
-            left: widget.position.dx,
-            top: widget.position.dy,
+            left: layout.mainLeft,
+            top: layout.mainTop,
             child: GestureDetector(
               onTap: () {},
               child: Material(
@@ -545,8 +637,13 @@ class _SlideContextMenuState extends State<_SlideContextMenu> {
                         onSelected: widget.onDelete,
                       ),
                       MouseRegion(
-                        onEnter: (_) => setState(() => _tagHovered = true),
-                        onExit: (_) => setState(() => _tagHovered = false),
+                        onEnter: (_) =>
+                            setState(() => _openSubmenu = _SlideSubmenu.tag),
+                        onExit: (_) => setState(() {
+                          if (_openSubmenu == _SlideSubmenu.tag) {
+                            _openSubmenu = _SlideSubmenu.none;
+                          }
+                        }),
                         child: SizedBox(
                           height: _rowHeight,
                           child: Padding(
@@ -556,11 +653,49 @@ class _SlideContextMenuState extends State<_SlideContextMenu> {
                                 Expanded(
                                   child: Text(
                                     'Tag',
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
                                   ),
                                 ),
                                 Icon(
-                                  Icons.chevron_right,
+                                  layout.submenuOpensLeft
+                                      ? Icons.chevron_left
+                                      : Icons.chevron_right,
+                                  size: 18,
+                                  color: colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      MouseRegion(
+                        onEnter: (_) => setState(
+                          () => _openSubmenu = _SlideSubmenu.colorTag,
+                        ),
+                        onExit: (_) => setState(() {
+                          if (_openSubmenu == _SlideSubmenu.colorTag) {
+                            _openSubmenu = _SlideSubmenu.none;
+                          }
+                        }),
+                        child: SizedBox(
+                          height: _rowHeight,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '색 태그',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ),
+                                Icon(
+                                  layout.submenuOpensLeft
+                                      ? Icons.chevron_left
+                                      : Icons.chevron_right,
                                   size: 18,
                                   color: colorScheme.onSurface
                                       .withValues(alpha: 0.6),
@@ -576,18 +711,20 @@ class _SlideContextMenuState extends State<_SlideContextMenu> {
               ),
             ),
           ),
-          if (_tagHovered)
+          if (_openSubmenu == _SlideSubmenu.tag)
             Positioned(
-              left: widget.position.dx + _menuWidth - 4,
-              top: widget.position.dy + _tagRowIndex * _rowHeight,
+              left: layout.submenuLeft,
+              top: layout.submenuTop,
               child: MouseRegion(
-                onEnter: (_) => setState(() => _tagHovered = true),
-                onExit: (_) => setState(() => _tagHovered = false),
+                onEnter: (_) =>
+                    setState(() => _openSubmenu = _SlideSubmenu.tag),
+                onExit: (_) => setState(() => _openSubmenu = _SlideSubmenu.none),
                 child: Material(
                   elevation: 8,
                   borderRadius: BorderRadius.circular(8),
                   color: colorScheme.surfaceContainerHigh,
-                  child: IntrinsicWidth(
+                  child: SizedBox(
+                    width: _submenuWidth,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisSize: MainAxisSize.min,
@@ -609,7 +746,94 @@ class _SlideContextMenuState extends State<_SlideContextMenu> {
                 ),
               ),
             ),
+          if (_openSubmenu == _SlideSubmenu.colorTag)
+            Positioned(
+              left: layout.submenuLeft,
+              top: layout.submenuTop,
+              child: MouseRegion(
+                onEnter: (_) =>
+                    setState(() => _openSubmenu = _SlideSubmenu.colorTag),
+                onExit: (_) =>
+                    setState(() => _openSubmenu = _SlideSubmenu.none),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: BorderRadius.circular(8),
+                  color: colorScheme.surfaceContainerHigh,
+                  child: SizedBox(
+                    width: _colorSubmenuWidth,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ...kSlideColorTags.map(
+                          (entry) => _ColorTagMenuAction(
+                            hex: entry.$1,
+                            label: entry.$2,
+                            onSelected: () => widget.onSetColorTag(entry.$1),
+                          ),
+                        ),
+                        const Divider(height: 1),
+                        _ContextMenuAction(
+                          label: '지우기',
+                          onSelected: () => widget.onSetColorTag(null),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
+      ),
+    );
+  }
+}
+
+class _ColorTagMenuAction extends StatelessWidget {
+  const _ColorTagMenuAction({
+    required this.hex,
+    required this.label,
+    required this.onSelected,
+  });
+
+  final String hex;
+  final String label;
+  final VoidCallback onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onSelected,
+      child: SizedBox(
+        height: 36,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              Container(
+                width: 14,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: parseHexColor(hex),
+                  borderRadius: BorderRadius.circular(3),
+                  border: Border.all(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.5),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

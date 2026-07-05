@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "이 천지간 만물들아",
+  "hymnNumber": 5,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "0eb36834-9c3d-4ae8-aa75-4ebec1f80a09",
+          "id": "0ab4ae39-d281-460c-8960-f8aca145b42a",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "60d2aee2-cba3-4235-aa13-e60c7843993c",
+          "id": "ca119be6-2c2f-4642-ac61-f907fb5e6dde",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

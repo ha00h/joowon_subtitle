@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "주를 경배하리",
+  "hymnNumber": 616,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "5078d7cf-96aa-4b94-b248-aac0e082d524",
+          "id": "0236f1ae-627c-4c80-b869-bfc69005ff10",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "879f8474-086a-45a6-af8a-f388a9f2dfd6",
+          "id": "73d6bbd3-2608-42a1-862c-72a9f3960055",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

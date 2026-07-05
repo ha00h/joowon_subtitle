@@ -27,6 +27,7 @@ mixin PlaybackSlideOpsMixin on Notifier<PlaybackState> {
     final source = sub.slides[index];
     final copy = Slide(
       tag: source.tag,
+      colorTag: source.colorTag,
       elements: source.elements
           .map(
             (e) => e.copyWith(id: _uuid.v4()),
@@ -44,10 +45,100 @@ mixin PlaybackSlideOpsMixin on Notifier<PlaybackState> {
     final sub = _playback.currentSub;
     if (sub == null || index < 0 || index >= sub.slides.length) return;
 
+    final slide = sub.slides[index];
+    final slides = [...sub.slides];
+    slides[index] = Slide(
+      elements: slide.elements,
+      tag: tag,
+      colorTag: slide.colorTag,
+    );
+
+    if (tag != null && slideHasVerseLabel(slide.elements)) {
+      final labelText = verseLabelTextForSlide(
+            slide: slides[index],
+            allSlides: slides,
+            hymnNumber: sub.hymnNumber,
+            slideIndex: index,
+          ) ??
+          '';
+      slides[index] = Slide(
+        elements: slide.elements.map((e) {
+          if (e.type == SlideElementType.verseLabel) {
+            return e.copyWith(lines: [labelText]);
+          }
+          return e;
+        }).toList(),
+        tag: tag,
+        colorTag: slide.colorTag,
+      );
+    }
+
+    _playback.updateSub(sub.copyWith(slides: slides));
+  }
+
+  void setSlideVerseLabel(int index, {required bool enabled}) {
+    final sub = _playback.currentSub;
+    if (sub == null || index < 0 || index >= sub.slides.length) return;
+
+    final style = ref.read(activeStyleFileProvider);
+    final slide = sub.slides[index];
+    final labelText = verseLabelTextForSlide(
+          slide: slide,
+          allSlides: sub.slides,
+          hymnNumber: sub.hymnNumber,
+          slideIndex: index,
+        ) ??
+        '';
+    final labelRegion = style.primaryVerseLabelRegion;
+
+    List<SlideElement> elements;
+    if (enabled) {
+      if (slideHasVerseLabel(slide.elements)) return;
+      elements = [
+        ...slide.elements,
+        applyStyleConfigToTextElement(
+          SlideElement(
+            id: _uuid.v4(),
+            type: SlideElementType.verseLabel,
+            x: labelRegion.x,
+            y: labelRegion.y,
+            width: labelRegion.width,
+            height: labelRegion.height,
+            zIndex: 2,
+            lines: [labelText],
+            anchor: 'topLeft',
+          ),
+          style.verseLabel,
+          x: labelRegion.x,
+          y: labelRegion.y,
+          width: labelRegion.width,
+          height: labelRegion.height,
+        ),
+      ];
+    } else {
+      elements = slide.elements
+          .where((e) => e.type != SlideElementType.verseLabel)
+          .toList();
+    }
+
+    final slides = [...sub.slides];
+    slides[index] = Slide(
+      elements: elements,
+      tag: slide.tag,
+      colorTag: slide.colorTag,
+    );
+    _playback.updateSub(sub.copyWith(slides: slides));
+    _playback.syncToOutput();
+  }
+
+  void setSlideColorTag(int index, String? colorTag) {
+    final sub = _playback.currentSub;
+    if (sub == null || index < 0 || index >= sub.slides.length) return;
+
     final slides = [...sub.slides];
     slides[index] = slides[index].copyWith(
-      tag: tag,
-      clearTag: tag == null,
+      colorTag: colorTag,
+      clearColorTag: colorTag == null,
     );
     _playback.updateSub(sub.copyWith(slides: slides));
   }
@@ -83,7 +174,11 @@ mixin PlaybackSlideOpsMixin on Notifier<PlaybackState> {
     }
 
     final slides = [...sub.slides];
-    slides[index] = Slide(elements: elements, tag: slide.tag);
+    slides[index] = Slide(
+      elements: elements,
+      tag: slide.tag,
+      colorTag: slide.colorTag,
+    );
     _playback.updateSub(sub.copyWith(slides: slides));
   }
 

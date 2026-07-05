@@ -13,6 +13,7 @@ import '../../providers/style_provider.dart';
 import '../../providers/workspace_provider.dart';
 import '../../providers/update_provider.dart';
 import '../../widgets/dialogs/update_available_dialog.dart';
+import '../../widgets/common/panel_resize_handle.dart';
 import '../../widgets/panels/operator_keyboard_shortcuts.dart';
 import '../../widgets/panels/operator_search_panel.dart';
 import '../../widgets/panels/operator_status_bar.dart';
@@ -31,6 +32,7 @@ class OperatorScreen extends ConsumerStatefulWidget {
 
 class _OperatorScreenState extends ConsumerState<OperatorScreen> {
   final _playbackFocusNode = FocusNode(debugLabel: 'playback');
+  double? _dragPanelWidth;
 
   @override
   void dispose() {
@@ -123,6 +125,9 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
       ref.read(outputWindowProvider.notifier).syncPlaybackIfOpen();
     });
 
+    final settings = ref.watch(settingsProvider);
+    final panelWidth = _dragPanelWidth ?? settings.operatorPanelWidth;
+
     return Shortcuts(
       shortcuts: operatorKeyboardShortcuts,
       child: Actions(
@@ -134,8 +139,29 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
             body: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(width: 300, child: OperatorSearchPanel()),
-                const VerticalDivider(width: 1),
+                SizedBox(
+                  width: panelWidth,
+                  child: const OperatorSearchPanel(),
+                ),
+                PanelResizeHandle(
+                  axis: Axis.horizontal,
+                  onDelta: (dx) {
+                    final base = _dragPanelWidth ?? settings.operatorPanelWidth;
+                    final next = (base + dx).clamp(
+                      AppSettings.minOperatorPanelWidth,
+                      AppSettings.maxOperatorPanelWidth,
+                    );
+                    setState(() => _dragPanelWidth = next);
+                  },
+                  onDragEnd: () {
+                    final width = _dragPanelWidth;
+                    if (width == null) return;
+                    ref
+                        .read(settingsProvider.notifier)
+                        .setOperatorPanelWidth(width);
+                    setState(() => _dragPanelWidth = null);
+                  },
+                ),
                 Expanded(
                   child: Listener(
                     onPointerDown: (_) => _focusPlaybackArea(),

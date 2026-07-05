@@ -5,6 +5,7 @@ class SubFile {
     required this.title,
     required this.slides,
     this.version = 2,
+    this.hymnNumber,
   });
 
   static const format = 'joowon-subtitle';
@@ -12,6 +13,8 @@ class SubFile {
   final String title;
   final List<Slide> slides;
   final int version;
+  /// 새찬송가 곡 번호 (절 표기 `N장 M절`용)
+  final int? hymnNumber;
 
   factory SubFile.fromJson(Map<String, dynamic> json) {
     final version = json['version'] as int? ?? 1;
@@ -24,6 +27,7 @@ class SubFile {
     return SubFile(
       title: json['title'] as String,
       version: 2,
+      hymnNumber: json['hymnNumber'] as int?,
       slides: slidesJson.map(Slide.fromJson).toList(),
     );
   }
@@ -57,14 +61,21 @@ class SubFile {
         'format': format,
         'version': version,
         'title': title,
+        if (hymnNumber != null) 'hymnNumber': hymnNumber,
         'slides': slides.map((s) => s.toJson()).toList(),
       };
 
-  SubFile copyWith({String? title, List<Slide>? slides}) {
+  SubFile copyWith({
+    String? title,
+    List<Slide>? slides,
+    int? hymnNumber,
+    bool clearHymnNumber = false,
+  }) {
     return SubFile(
       title: title ?? this.title,
       slides: slides ?? this.slides,
       version: version,
+      hymnNumber: clearHymnNumber ? null : (hymnNumber ?? this.hymnNumber),
     );
   }
 }

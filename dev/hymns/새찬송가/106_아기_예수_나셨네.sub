@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "아기 예수 나셨네",
+  "hymnNumber": 106,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "7ea24c9d-273d-4d0b-b26e-7030cbe7c77f",
+          "id": "9a83761e-b66c-4783-8d95-28847bb1eb0a",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -37,8 +38,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "f28a9e31-a034-4b4f-bd50-88f6e1f26b72",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 106장 1절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "5c565b21-8bfa-4046-bc69-4833c1fc2214",
+          "id": "9e0fafee-8338-43a5-8891-bce49ab98e57",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -69,8 +96,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "dfe76135-ed44-41c5-a254-9da2898907c1",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 106장 2절"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "2b216570-01c1-4490-b496-ea8e37f5c613",
+          "id": "3117484f-c9d3-4e77-bc4a-7dfdc50fbf46",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -101,8 +154,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "f8bcb751-ec50-4daf-8b8a-86104284abf4",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 106장 3절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "3bf8c6eb-e413-4cc8-b140-b1c57d997c5b",
+          "id": "c9170f9f-073f-4d34-9509-078453fafcc3",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -133,8 +212,34 @@
     {
       "elements": [
         {
+          "type": "verseLabel",
+          "id": "14f335c8-fc9c-4539-bbaf-6f53f72faeb1",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 106장 3절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
           "type": "text",
-          "id": "ddc2443a-f76b-4b79-907c-6045e2957592",
+          "id": "7d2fb785-6df6-4f1a-8aa9-77a7a9cf8fa0",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

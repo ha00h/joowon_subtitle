@@ -185,6 +185,40 @@ class OrderNotifier extends Notifier<OrderState> {
           .toList(),
     );
   }
+
+  Future<void> renameFileReferences(
+    String oldPath,
+    String newPath,
+    String newTitle,
+  ) async {
+    await _repo.init();
+    var changed = false;
+    final updatedOrders = <ServiceOrder>[];
+
+    for (final order in state.orders) {
+      var orderChanged = false;
+      final items = order.items.map((item) {
+        if (item.filePath != oldPath) return item;
+        orderChanged = true;
+        return ServiceOrderItem(filePath: newPath, title: newTitle);
+      }).toList();
+
+      if (orderChanged) {
+        changed = true;
+        final updated = order.copyWith(
+          items: items,
+          updatedAt: DateTime.now().toIso8601String(),
+        );
+        await _repo.saveOrder(updated);
+        updatedOrders.add(updated);
+      } else {
+        updatedOrders.add(order);
+      }
+    }
+
+    if (!changed) return;
+    state = state.copyWith(orders: updatedOrders);
+  }
 }
 
 final orderProvider = NotifierProvider<OrderNotifier, OrderState>(

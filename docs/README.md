@@ -11,6 +11,7 @@
 |------|------|------|
 | [MVP.md](./MVP.md) | 기능·범위·데이터 형식 **명세** (기준 문서) | 전원 |
 | [DEVELOPMENT_PLAN.md](./DEVELOPMENT_PLAN.md) | **개발 계획** — Phase, 마일스톤, 작업 분해 | 개발 |
+| [PLAN_v1.1.md](./PLAN_v1.1.md) | **v1.1 실행 계획** — v1.0.3 피드백·개발 순서 | 개발 |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | **기술 아키텍처** — 모듈, 상태, 윈도우 | 개발 |
 | [SETUP.md](./SETUP.md) | **개발 환경** — Mac 셋업, Windows CI 빌드 | 개발 |
 | [VERIFICATION.md](./VERIFICATION.md) | **검증 방법** — 단위/통합/수동/수용 테스트 | 개발·QA |

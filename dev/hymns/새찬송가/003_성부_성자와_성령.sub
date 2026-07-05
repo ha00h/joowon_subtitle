@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "성부 성자와 성령",
+  "hymnNumber": 3,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "db1431ad-8e57-4584-bb04-197afb1296ac",
+          "id": "e30cca48-c275-4d4a-85a2-d513e5819f48",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "e68b4aca-66d7-4870-b1d0-58604edf83ce",
+          "id": "6c816f37-7c7f-4812-be2b-50fe23bf2a98",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

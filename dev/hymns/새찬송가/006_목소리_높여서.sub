@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "목소리 높여서",
+  "hymnNumber": 6,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "8c093e55-f803-49ac-9171-a1048b23b2a5",
+          "id": "9a8c7260-9d22-4381-b9d1-84ddc7e6a04b",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "bee744a5-5e13-4723-a751-0165113b5c3f",
+          "id": "a22de729-a74f-47a2-8604-6b1e3c88f0f1",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

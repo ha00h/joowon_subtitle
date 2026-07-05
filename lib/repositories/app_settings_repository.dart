@@ -11,6 +11,8 @@ class AppSettingsRepository {
   static const styleBookmarkKey = 'styleBookmark';
   static const outputBackgroundKey = 'outputBackground';
   static const outputMonitorIdKey = 'outputMonitorId';
+  static const operatorPanelWidthKey = 'operatorPanelWidth';
+  static const operatorSearchListRatioKey = 'operatorSearchListRatio';
   static const skippedUpdateVersionKey = 'skippedUpdateVersion';
   static const lastUpdateCheckAtKey = 'lastUpdateCheckAt';
 
@@ -48,7 +50,21 @@ class AppSettingsRepository {
               ? OutputBackground.transparent
               : OutputBackground.black,
       outputMonitorId: _box?.get(outputMonitorIdKey),
+      operatorPanelWidth: _readDouble(
+        operatorPanelWidthKey,
+        AppSettings.defaultOperatorPanelWidth,
+      ),
+      operatorSearchListRatio: _readDouble(
+        operatorSearchListRatioKey,
+        0.6,
+      ),
     );
+  }
+
+  double _readDouble(String key, double fallback) {
+    final raw = _box?.get(key);
+    if (raw == null) return fallback;
+    return double.tryParse(raw) ?? fallback;
   }
 
   Future<void> writeWorkspacePath(String? path, {String? bookmark}) async {
@@ -96,6 +112,16 @@ class AppSettingsRepository {
     } else {
       await b.put(outputMonitorIdKey, id);
     }
+  }
+
+  Future<void> writeOperatorPanelWidth(double width) async {
+    final b = await box();
+    await b.put(operatorPanelWidthKey, width.toString());
+  }
+
+  Future<void> writeOperatorSearchListRatio(double ratio) async {
+    final b = await box();
+    await b.put(operatorSearchListRatioKey, ratio.toString());
   }
 
   String? readSkippedUpdateVersion() {

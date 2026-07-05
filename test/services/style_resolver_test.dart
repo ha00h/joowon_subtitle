@@ -33,6 +33,15 @@ void main() {
           textShadow: 'none',
           defaultPosition: (x: 50, y: 50),
         ),
+        verseLabel: TextStyleConfig(
+          fontFamily: 'Nanum Gothic',
+          fontSize: 36,
+          fontWeight: 600,
+          color: '#FF0000',
+          textShadow: 'none',
+          defaultPosition: (x: 50, y: 4),
+          textAlign: 'left',
+        ),
       );
       const resolver = StyleResolver(styleFile: styleFile);
       final style = resolver.resolveText(element);
@@ -63,6 +72,41 @@ void main() {
       expect(style.shadow.enabled, isTrue);
       expect(style.shadow.offsetX, 4);
       expect(style.shadow.color, '#000000CC');
+    });
+    test('ST-02: verseLabel uses verseLabel style', () {
+      const styleFile = StyleFile(
+        name: 's',
+        text: TextStyleConfig(
+          fontFamily: 'Noto Sans KR',
+          fontSize: 72,
+          fontWeight: 700,
+          color: '#FFFFFF',
+          textShadow: 'none',
+          defaultPosition: (x: 8, y: 10),
+        ),
+        verseLabel: TextStyleConfig(
+          fontFamily: 'Noto Sans KR',
+          fontSize: 36,
+          fontWeight: 600,
+          color: '#FFD700',
+          textShadow: 'none',
+          defaultPosition: (x: 8, y: 4),
+          textAlign: 'left',
+        ),
+      );
+      const label = SlideElement(
+        id: 'vl1',
+        type: SlideElementType.verseLabel,
+        x: 8,
+        y: 4,
+        zIndex: 2,
+        lines: ['1절'],
+      );
+      const resolver = StyleResolver(styleFile: styleFile);
+      final style = resolver.resolveText(label);
+      expect(style.fontSize, 36);
+      expect(style.color, '#FFD700');
+      expect(style.textAlign, 'left');
     });
   });
 }

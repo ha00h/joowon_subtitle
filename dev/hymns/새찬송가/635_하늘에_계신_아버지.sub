@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "하늘에 계신 아버지",
+  "hymnNumber": 635,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "3de069e2-3633-49a7-8a0e-4ae184249853",
+          "id": "b9ac9d21-8b92-44a1-a6e0-54f464e3abf8",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "7f62d7f1-58aa-4d29-a724-b35ac1fa9424",
+          "id": "1216c9a4-648e-4b8b-b638-c900b2ac8e52",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -69,7 +70,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "41ca2267-bb2e-4ee1-ad14-411b432e9a4e",
+          "id": "58cda0e0-a9fd-48e2-ada6-dbaf2eb5130d",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

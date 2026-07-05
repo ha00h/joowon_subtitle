@@ -94,6 +94,8 @@ void main(List<String> args) async {
       title: hymn.title,
       style: style,
       linesPerSlide: linesPerSlide,
+      hymnNumber: hymn.number,
+      includeVerseLabel: true,
     );
 
     final fileName = _outputFileName(hymn.number, hymn.title);

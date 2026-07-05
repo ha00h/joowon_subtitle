@@ -27,6 +27,16 @@ const operatorKeyboardShortcuts = <ShortcutActivator, Intent>{
   SingleActivator(LogicalKeyboardKey.digit8): DigitIntent('8'),
   SingleActivator(LogicalKeyboardKey.digit9): DigitIntent('9'),
   SingleActivator(LogicalKeyboardKey.digit0): DigitIntent('0'),
+  SingleActivator(LogicalKeyboardKey.numpad0): DigitIntent('0'),
+  SingleActivator(LogicalKeyboardKey.numpad1): DigitIntent('1'),
+  SingleActivator(LogicalKeyboardKey.numpad2): DigitIntent('2'),
+  SingleActivator(LogicalKeyboardKey.numpad3): DigitIntent('3'),
+  SingleActivator(LogicalKeyboardKey.numpad4): DigitIntent('4'),
+  SingleActivator(LogicalKeyboardKey.numpad5): DigitIntent('5'),
+  SingleActivator(LogicalKeyboardKey.numpad6): DigitIntent('6'),
+  SingleActivator(LogicalKeyboardKey.numpad7): DigitIntent('7'),
+  SingleActivator(LogicalKeyboardKey.numpad8): DigitIntent('8'),
+  SingleActivator(LogicalKeyboardKey.numpad9): DigitIntent('9'),
   SingleActivator(LogicalKeyboardKey.delete): DeleteSlideIntent(),
 };
 

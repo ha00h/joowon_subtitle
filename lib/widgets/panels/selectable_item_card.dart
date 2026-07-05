@@ -37,7 +37,10 @@ class SelectableItemCard extends StatelessWidget {
               : null,
         ),
         clipBehavior: Clip.antiAlias,
-        child: child,
+        child: Material(
+          color: Colors.transparent,
+          child: child,
+        ),
       ),
     );
   }

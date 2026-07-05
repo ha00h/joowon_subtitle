@@ -55,7 +55,12 @@ class StyleResolver {
   final StyleFile? styleFile;
 
   ResolvedTextStyle resolveText(SlideElement element) {
-    final base = styleFile?.text;
+    final base = element.type == SlideElementType.verseLabel
+        ? (styleFile?.verseLabel ??
+            (styleFile != null
+                ? StyleFile.defaultVerseLabelFromBody(styleFile!.text)
+                : null))
+        : styleFile?.text;
     final shadow = _resolveShadow(element, base);
     return ResolvedTextStyle(
       fontFamily: element.fontFamily ??

@@ -34,25 +34,44 @@ mixin PlaybackEditorOpsMixin on Notifier<PlaybackState> {
     final sub = _playback.currentSub;
     if (sub == null) return;
 
-    final region = style.primaryBodyRegion;
-    final text = style.text;
+    final bodyRegion = style.primaryBodyRegion;
+    final labelRegion = style.primaryVerseLabelRegion;
 
     List<SlideElement> styledElements(List<SlideElement> elements) {
-      return elements
-          .map(
-            (e) => applyStyleConfigToTextElement(
-              e,
-              text,
-              x: region.x,
-              y: region.y,
-            ),
-          )
-          .toList();
+      return elements.map((e) {
+        if (e.type == SlideElementType.verseLabel) {
+          return applyStyleConfigToTextElement(
+            e,
+            style.verseLabel,
+            x: labelRegion.x,
+            y: labelRegion.y,
+            width: labelRegion.width,
+            height: labelRegion.height,
+          );
+        }
+        if (e.type == SlideElementType.text) {
+          return applyStyleConfigToTextElement(
+            e,
+            style.text,
+            x: bodyRegion.x,
+            y: bodyRegion.y,
+            width: bodyRegion.width,
+            height: bodyRegion.height,
+          );
+        }
+        return e;
+      }).toList();
     }
 
     if (allSlides) {
       final slides = sub.slides
-          .map((s) => Slide(elements: styledElements(s.elements)))
+          .map(
+            (s) => Slide(
+              elements: styledElements(s.elements),
+              tag: s.tag,
+              colorTag: s.colorTag,
+            ),
+          )
           .toList();
       _playback.updateSub(sub.copyWith(slides: slides));
       return;
@@ -61,7 +80,11 @@ mixin PlaybackEditorOpsMixin on Notifier<PlaybackState> {
     final idx = state.slideIndex;
     if (idx < 0 || idx >= sub.slides.length) return;
     final slides = [...sub.slides];
-    slides[idx] = Slide(elements: styledElements(slides[idx].elements));
+    slides[idx] = Slide(
+      elements: styledElements(slides[idx].elements),
+      tag: slides[idx].tag,
+      colorTag: slides[idx].colorTag,
+    );
     _playback.updateSub(sub.copyWith(slides: slides));
   }
 }

@@ -6,6 +6,7 @@
 List<ConvertedSlide> convertHymnTxtToSlides(
   String content, {
   int linesPerSlide = 2,
+  bool onlyFirstVerse = false,
 }) {
   if (linesPerSlide < 1) {
     throw ArgumentError.value(linesPerSlide, 'linesPerSlide', 'must be >= 1');
@@ -14,6 +15,7 @@ List<ConvertedSlide> convertHymnTxtToSlides(
   final slides = <ConvertedSlide>[];
   var stanzaLines = <String>[];
   String? stanzaTag;
+  var stanzaCount = 0;
 
   void flushStanza() {
     if (stanzaLines.isEmpty) return;
@@ -27,12 +29,16 @@ List<ConvertedSlide> convertHymnTxtToSlides(
 
     stanzaLines = [];
     stanzaTag = null;
+    stanzaCount++;
   }
 
   for (final rawLine in content.split('\n')) {
+    if (onlyFirstVerse && stanzaCount >= 1) break;
+
     final trimmed = rawLine.trimRight();
     if (trimmed.isEmpty) {
       flushStanza();
+      if (onlyFirstVerse && stanzaCount >= 1) break;
       continue;
     }
 
@@ -43,7 +49,9 @@ List<ConvertedSlide> convertHymnTxtToSlides(
     stanzaLines.add(parsed.text);
   }
 
-  flushStanza();
+  if (!onlyFirstVerse || stanzaCount < 1) {
+    flushStanza();
+  }
   return slides;
 }
 

@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "오늘 주신 말씀에",
+  "hymnNumber": 57,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "53ce8409-ed68-480c-a5df-29aec45469dd",
+          "id": "adce374b-3786-449f-8e00-1b9faed28df0",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "580a62f9-2f81-48ad-916f-e952fbaf1795",
+          "id": "b44204dd-5473-41d2-aa10-961c3061c814",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

@@ -1,4 +1,4 @@
-enum SlideElementType { text, image, shape }
+enum SlideElementType { text, verseLabel, image, shape }
 
 enum ShapeType { rect, ellipse, line }
 
@@ -12,10 +12,130 @@ const kSlideTags = [
   '반복',
 ];
 
+/// 슬라이드 그리드 색 태그용 팔레트 (hex)
+const kSlideColorTags = [
+  ('#FF6B6B', '빨강'),
+  ('#FFA500', '주황'),
+  ('#FFD700', '금색'),
+  ('#2ECC71', '초록'),
+  ('#3498DB', '파랑'),
+  ('#9B59B6', '보라'),
+  ('#FF69B4', '분홍'),
+  ('#808080', '회색'),
+];
+
 String formatSlideLabel(int slideNumber, String? tag) {
   final base = '[$slideNumber]';
   if (tag != null && tag.isNotEmpty) return '$base $tag';
   return base;
+}
+
+/// 슬라이드 tag → 송출 절 표기 텍스트 (일반·레거시)
+String verseLabelTextFromTag(String? tag) {
+  if (tag == null || tag.isEmpty) return '';
+  if (tag.startsWith('후렴')) return '후렴';
+  return tag;
+}
+
+/// 후렴 구간 태그 여부 (송출 절 표기 생략)
+bool isRefrainTag(String? tag) {
+  if (tag == null || tag.isEmpty) return false;
+  return tag.startsWith('후렴');
+}
+
+/// 슬라이드 목록에서 마지막 **절** 태그 (후렴 제외)
+String? lastVerseStanzaTag(Iterable<Slide> slides) {
+  String? last;
+  for (final slide in slides) {
+    final tag = slide.tag;
+    if (tag != null && tag.isNotEmpty && !isRefrainTag(tag)) {
+      last = tag;
+    }
+  }
+  return last;
+}
+
+/// 슬라이드 목록에서 마지막 구간 태그 (후렴 포함)
+String? lastStanzaTag(Iterable<Slide> slides) {
+  String? last;
+  for (final slide in slides) {
+    if (slide.tag != null && slide.tag!.isNotEmpty) {
+      last = slide.tag;
+    }
+  }
+  return last;
+}
+
+/// 새찬송가 송출 절 표기: `새찬송가 8장 1절`, 마지막 절은 `… 마지막` 접미
+String saechansonggaVerseLabelText({
+  required int hymnNumber,
+  required String tag,
+  required bool isLastVerse,
+}) {
+  if (isRefrainTag(tag)) return '';
+  final base = '새찬송가 $hymnNumber장 $tag';
+  if (isLastVerse) return '$base 마지막';
+  return base;
+}
+
+/// 태그 없는 슬라이드가 속한 절의 구간 태그 (바로 앞 절 시작 슬라이드에서 상속)
+String? effectiveStanzaTag(List<Slide> slides, int slideIndex) {
+  if (slideIndex < 0 || slideIndex >= slides.length) return null;
+  final direct = slides[slideIndex].tag;
+  if (direct != null && direct.isNotEmpty) return direct;
+  for (var i = slideIndex - 1; i >= 0; i--) {
+    final t = slides[i].tag;
+    if (t != null && t.isNotEmpty) return t;
+  }
+  return null;
+}
+
+/// 곡 번호·슬라이드 맥락으로 절 표기 텍스트 결정 (후렴은 null, 같은 절 연속 슬라이드 포함)
+String? verseLabelTextForSlide({
+  required Slide slide,
+  required List<Slide> allSlides,
+  int? hymnNumber,
+  int? slideIndex,
+}) {
+  final index = slideIndex ?? allSlides.indexOf(slide);
+  if (index < 0) return null;
+  final tag = effectiveStanzaTag(allSlides, index);
+  if (tag == null || isRefrainTag(tag)) return null;
+  if (hymnNumber != null) {
+    final lastTag = lastVerseStanzaTag(allSlides);
+    return saechansonggaVerseLabelText(
+      hymnNumber: hymnNumber,
+      tag: tag,
+      isLastVerse: lastTag != null && tag == lastTag,
+    );
+  }
+  final text = verseLabelTextFromTag(tag);
+  return text.isEmpty ? null : text;
+}
+
+bool slideHasVerseLabel(List<SlideElement> elements) {
+  return elements.any((e) => e.type == SlideElementType.verseLabel);
+}
+
+bool isTextLikeElement(SlideElementType type) {
+  return type == SlideElementType.text || type == SlideElementType.verseLabel;
+}
+
+/// 찬송가 .sub에서 1절 슬라이드만 추출 (이어지는 무태그 슬라이드 포함)
+List<Slide> extractFirstVerseSlides(List<Slide> slides) {
+  final result = <Slide>[];
+  for (final slide in slides) {
+    if (slide.tag != null && slide.tag != '1절') break;
+    result.add(slide);
+  }
+  return result;
+}
+
+SlideElement? findVerseLabelElement(List<SlideElement> elements) {
+  for (final el in elements) {
+    if (el.type == SlideElementType.verseLabel) return el;
+  }
+  return null;
 }
 
 class SlideElement {
@@ -234,10 +354,11 @@ class SlideElement {
 }
 
 class Slide {
-  const Slide({required this.elements, this.tag});
+  const Slide({required this.elements, this.tag, this.colorTag});
 
   final List<SlideElement> elements;
   final String? tag;
+  final String? colorTag;
 
   factory Slide.fromJson(Map<String, dynamic> json) {
     final list = (json['elements'] as List<dynamic>? ?? [])
@@ -245,22 +366,27 @@ class Slide {
     return Slide(
       elements: list.map(SlideElement.fromJson).toList(),
       tag: json['tag'] as String?,
+      colorTag: json['colorTag'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'elements': elements.map((e) => e.toJson()).toList(),
         if (tag != null) 'tag': tag,
+        if (colorTag != null) 'colorTag': colorTag,
       };
 
   Slide copyWith({
     List<SlideElement>? elements,
     String? tag,
+    String? colorTag,
     bool clearTag = false,
+    bool clearColorTag = false,
   }) {
     return Slide(
       elements: elements ?? this.elements,
       tag: clearTag ? null : (tag ?? this.tag),
+      colorTag: clearColorTag ? null : (colorTag ?? this.colorTag),
     );
   }
 }

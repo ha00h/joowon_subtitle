@@ -267,6 +267,7 @@ class StyleFile {
   const StyleFile({
     required this.name,
     required this.text,
+    required this.verseLabel,
     this.backgroundMode = 'black',
     this.background = const BackgroundConfig(),
     this.textRegions = const [],
@@ -277,6 +278,7 @@ class StyleFile {
 
   final String name;
   final TextStyleConfig text;
+  final TextStyleConfig verseLabel;
   final String backgroundMode;
   final BackgroundConfig background;
   final List<TextRegionConfig> textRegions;
@@ -284,6 +286,10 @@ class StyleFile {
 
   factory StyleFile.fromJson(Map<String, dynamic> json) {
     final text = TextStyleConfig.fromJson(json['text'] as Map<String, dynamic>);
+    final verseLabelJson = json['verseLabel'] as Map<String, dynamic>?;
+    final verseLabel = verseLabelJson != null
+        ? TextStyleConfig.fromJson(verseLabelJson)
+        : defaultVerseLabelFromBody(text);
     final regionsJson = json['textRegions'] as List<dynamic>?;
     final regions = regionsJson != null
         ? _normalizeRegions(
@@ -293,11 +299,22 @@ class StyleFile {
                 .toList(),
             text.defaultPosition,
           )
-        : _bodyOnlyRegions(text.defaultPosition);
+        : _standardRegions(
+            TextRegionConfig(
+              id: 'body',
+              label: '본문',
+              x: text.defaultPosition.x,
+              y: text.defaultPosition.y,
+              width: 85,
+              height: 50,
+            ),
+            null,
+          );
 
     return StyleFile(
       name: json['name'] as String,
       text: text,
+      verseLabel: verseLabel,
       backgroundMode:
           (json['output'] as Map<String, dynamic>?)?['backgroundMode'] as String? ??
               'black',
@@ -309,29 +326,54 @@ class StyleFile {
     );
   }
 
+  static TextStyleConfig defaultVerseLabelFromBody(TextStyleConfig body) {
+    return body.copyWith(
+      fontSize: 36,
+      fontWeight: 600,
+      defaultPosition: (x: body.defaultPosition.x, y: 4),
+      textAlign: 'left',
+    );
+  }
+
   static List<TextRegionConfig> _normalizeRegions(
     List<TextRegionConfig> regions,
     ({double x, double y}) pos,
   ) {
-    final body = regions.cast<TextRegionConfig?>().firstWhere(
-          (r) => r!.id == 'body',
-          orElse: () => null,
-        );
-    if (body != null) return [body];
-    if (regions.length == 1) return regions;
-    return _bodyOnlyRegions(pos);
+    TextRegionConfig? body;
+    TextRegionConfig? verseLabel;
+    for (final region in regions) {
+      if (region.id == 'body') body = region;
+      if (region.id == 'verseLabel') verseLabel = region;
+    }
+    return _standardRegions(
+      body ??
+          TextRegionConfig(
+            id: 'body',
+            label: '본문',
+            x: pos.x,
+            y: pos.y,
+            width: 85,
+            height: 50,
+          ),
+      verseLabel,
+    );
   }
 
-  static List<TextRegionConfig> _bodyOnlyRegions(({double x, double y}) pos) {
+  static List<TextRegionConfig> _standardRegions(
+    TextRegionConfig body,
+    TextRegionConfig? verseLabel,
+  ) {
     return [
-      TextRegionConfig(
-        id: 'body',
-        label: '본문',
-        x: pos.x,
-        y: pos.y,
-        width: 85,
-        height: 50,
-      ),
+      body,
+      verseLabel ??
+          TextRegionConfig(
+            id: 'verseLabel',
+            label: '절 표기',
+            x: body.x,
+            y: 4,
+            width: 24,
+            height: 8,
+          ),
     ];
   }
 
@@ -340,6 +382,7 @@ class StyleFile {
         'version': version,
         'name': name,
         'text': text.toJson(),
+        'verseLabel': verseLabel.toJson(),
         'background': background.toJson(),
         'textRegions': textRegions.map((e) => e.toJson()).toList(),
         'output': {'backgroundMode': backgroundMode},
@@ -348,6 +391,7 @@ class StyleFile {
   StyleFile copyWith({
     String? name,
     TextStyleConfig? text,
+    TextStyleConfig? verseLabel,
     String? backgroundMode,
     BackgroundConfig? background,
     List<TextRegionConfig>? textRegions,
@@ -356,6 +400,7 @@ class StyleFile {
     return StyleFile(
       name: name ?? this.name,
       text: text ?? this.text,
+      verseLabel: verseLabel ?? this.verseLabel,
       backgroundMode: backgroundMode ?? this.backgroundMode,
       background: background ?? this.background,
       textRegions: textRegions ?? this.textRegions,
@@ -373,7 +418,7 @@ class StyleFile {
   TextRegionConfig get primaryBodyRegion =>
       regionById('body') ??
       (textRegions.isNotEmpty
-          ? textRegions.last
+          ? textRegions.first
           : TextRegionConfig(
               id: 'body',
               label: '본문',
@@ -383,17 +428,43 @@ class StyleFile {
               height: 50,
             ));
 
-  static StyleFile get defaultStyle => StyleFile(
-        name: '기본',
-        text: TextStyleConfig(
-          fontFamily: 'Noto Sans KR',
-          fontSize: 72,
-          fontWeight: 700,
-          color: '#FFFFFF',
-          textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
-          defaultPosition: (x: 8, y: 10),
-          textAlign: 'left',
-        ),
-        textRegions: _bodyOnlyRegions((x: 8, y: 10)),
+  TextRegionConfig get primaryVerseLabelRegion =>
+      regionById('verseLabel') ??
+      TextRegionConfig(
+        id: 'verseLabel',
+        label: '절 표기',
+        x: text.defaultPosition.x,
+        y: 4,
+        width: 24,
+        height: 8,
       );
+
+  static StyleFile get defaultStyle {
+    const bodyPos = (x: 8.0, y: 10.0);
+    final text = TextStyleConfig(
+      fontFamily: 'Noto Sans KR',
+      fontSize: 72,
+      fontWeight: 700,
+      color: '#FFFFFF',
+      textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
+      defaultPosition: bodyPos,
+      textAlign: 'left',
+    );
+    return StyleFile(
+      name: '기본',
+      text: text,
+      verseLabel: defaultVerseLabelFromBody(text),
+      textRegions: _standardRegions(
+        const TextRegionConfig(
+          id: 'body',
+          label: '본문',
+          x: 8,
+          y: 10,
+          width: 85,
+          height: 50,
+        ),
+        null,
+      ),
+    );
+  }
 }

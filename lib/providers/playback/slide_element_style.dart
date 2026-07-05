@@ -18,8 +18,10 @@ SlideElement applyStyleConfigToTextElement(
   TextStyleConfig text, {
   required double x,
   required double y,
+  double? width,
+  double? height,
 }) {
-  if (element.type != SlideElementType.text) return element;
+  if (!isTextLikeElement(element.type)) return element;
   return element.copyWith(
     fontFamily: text.fontFamily,
     fontSize: text.fontSize,
@@ -36,6 +38,8 @@ SlideElement applyStyleConfigToTextElement(
     textAlign: text.textAlign,
     x: x,
     y: y,
+    width: width,
+    height: height,
     anchor: 'topLeft',
   );
 }

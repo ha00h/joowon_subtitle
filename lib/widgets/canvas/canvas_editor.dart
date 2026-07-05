@@ -51,7 +51,8 @@ class _CanvasEditorState extends ConsumerState<CanvasEditor> {
             final hit = _hitTest(details.localPosition, w, h);
             if (hit == null) return;
             final el = widget.elements.firstWhere((e) => e.id == hit);
-            if (el.type == SlideElementType.text) {
+            if (el.type == SlideElementType.text ||
+                el.type == SlideElementType.verseLabel) {
               _editText(el);
             }
           },
@@ -70,8 +71,14 @@ class _CanvasEditorState extends ConsumerState<CanvasEditor> {
             final dy = (details.localPosition.dy - _dragStart!.dy) / h * 100;
             playback.moveElement(
               _draggingId!,
-              (el.x + dx).clamp(0, 100),
-              (el.y + dy).clamp(0, 100),
+              (el.x + dx).clamp(
+                kCanvasPercentMin,
+                kCanvasPercentMax - (el.width ?? 0),
+              ),
+              (el.y + dy).clamp(
+                kCanvasPercentMin,
+                kCanvasPercentMax - (el.height ?? 0),
+              ),
               recordUndo: !_dragUndoRecorded,
             );
             _dragUndoRecorded = true;
@@ -118,7 +125,7 @@ class _CanvasEditorState extends ConsumerState<CanvasEditor> {
       final cy = el.y / 100 * h;
 
       final Rect rect;
-      if (el.type == SlideElementType.text) {
+      if (isTextLikeElement(el.type)) {
         final style = widget.resolveText(el);
         rect = textElementScreenRect(
           element: el,
@@ -142,7 +149,9 @@ class _CanvasEditorState extends ConsumerState<CanvasEditor> {
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('가사 편집'),
+        title: Text(
+          el.type == SlideElementType.verseLabel ? '절 표기 편집' : '가사 편집',
+        ),
         content: TextField(
           controller: controller,
           maxLines: 8,
@@ -184,7 +193,7 @@ class _SelectionOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Rect rect;
-    if (element.type == SlideElementType.text) {
+    if (isTextLikeElement(element.type)) {
       final style = resolveText(element);
       rect = textElementScreenRect(
         element: element,

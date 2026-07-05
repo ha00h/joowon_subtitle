@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/app_branding.dart';
@@ -19,37 +20,40 @@ class OutputScreen extends ConsumerWidget {
         ? Colors.transparent
         : Colors.black;
 
-    return Material(
-      color: bg,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final maxW = constraints.maxWidth;
-          final maxH = constraints.maxHeight;
-          if (maxW <= 0 || maxH <= 0) {
-            return const SizedBox.shrink();
-          }
+    return MouseRegion(
+      cursor: SystemMouseCursors.none,
+      child: Material(
+        color: bg,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxW = constraints.maxWidth;
+            final maxH = constraints.maxHeight;
+            if (maxW <= 0 || maxH <= 0) {
+              return const SizedBox.shrink();
+            }
 
-          // 16:9 fit within window
-          var w = maxW;
-          var h = w * 9 / 16;
-          if (h > maxH) {
-            h = maxH;
-            w = h * 16 / 9;
-          }
+            // 16:9 fit within window
+            var w = maxW;
+            var h = w * 9 / 16;
+            if (h > maxH) {
+              h = maxH;
+              w = h * 16 / 9;
+            }
 
-          return Center(
-            child: SizedBox(
-              width: w,
-              height: h,
-              child: CanvasRenderer(
-                elements: slide?.elements ?? const <SlideElement>[],
-                resolveText: resolver.resolveText,
-                isBlank: playback.isBlank,
-                showCheckerboard: false,
+            return Center(
+              child: SizedBox(
+                width: w,
+                height: h,
+                child: CanvasRenderer(
+                  elements: slide?.elements ?? const <SlideElement>[],
+                  resolveText: resolver.resolveText,
+                  isBlank: playback.isBlank,
+                  showCheckerboard: false,
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

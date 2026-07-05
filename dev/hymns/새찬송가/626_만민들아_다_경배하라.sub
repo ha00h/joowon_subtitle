@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "만민들아 다 경배하라",
+  "hymnNumber": 626,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "a3dbf5a6-4c49-4759-91bf-d97d19f7485c",
+          "id": "4519bc29-d79d-4c65-9fd5-5d9ca3b8aa09",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "6a2a7930-cace-4f08-a815-4d0fd946711e",
+          "id": "985de818-4654-4afd-b482-1f9de3651472",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

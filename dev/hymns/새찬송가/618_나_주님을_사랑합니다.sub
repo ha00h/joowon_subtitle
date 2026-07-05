@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "나 주님을 사랑합니다",
+  "hymnNumber": 618,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "c611aefc-ac82-49fb-ab20-4b760ed5a379",
+          "id": "79f2d0a0-16c3-483a-b5f4-fdd418c3cbc0",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "1dca6a94-1573-488e-9b0a-00fc26c8704d",
+          "id": "cb83163b-9a17-48f7-b6a3-4c38278d0ed5",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "주여 주여 우리를",
+  "hymnNumber": 632,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "b5d1a0db-c803-46fb-b6f9-713f91b8879b",
+          "id": "061434a5-c5e3-49c5-be10-96062a1d0164",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "83c11af2-8a8d-4a76-ab10-4ad6a5261495",
+          "id": "a1df6bdf-7344-4b88-84d5-9c54398b7d9e",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

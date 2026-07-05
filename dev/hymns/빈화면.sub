@@ -1,0 +1,26 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "빈화면",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "65a2566d-95e9-448a-b5cd-0e66a4b149a4",
+          "x": 40.6715158045977,
+          "y": 66.2124840357599,
+          "zIndex": 1,
+          "lines": [
+            "6.1~6.2 — 절 표기 송출 + 스타일 verseLabel",
+            "6.3 — UI import 시 hymn 파서 연동",
+            "6.5 — 새찬송가 일괄 재변환 (선택)"
+          ],
+          "anchor": "topLeft",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

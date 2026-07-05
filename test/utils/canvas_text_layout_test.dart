@@ -69,6 +69,30 @@ void main() {
       expect(rect.center, const Offset(400, 225));
     });
 
+    test('textElementScreenRect uses width and height box when set', () {
+      const element = SlideElement(
+        id: 't1',
+        type: SlideElementType.text,
+        x: 8,
+        y: 10,
+        width: 85,
+        height: 50,
+        zIndex: 1,
+        lines: ['가사'],
+        anchor: 'topLeft',
+      );
+      final rect = textElementScreenRect(
+        element: element,
+        style: style,
+        canvasWidth: 800,
+        canvasHeight: 450,
+      );
+      expect(rect.left, 64);
+      expect(rect.top, 45);
+      expect(rect.width, 680);
+      expect(rect.height, 225);
+    });
+
     test('canvasTextAlign maps strings', () {
       expect(canvasTextAlign('left'), TextAlign.left);
       expect(canvasTextAlign('right'), TextAlign.right);

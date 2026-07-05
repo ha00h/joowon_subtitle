@@ -13,6 +13,10 @@ const kCanvasFontFallbacks = [
   'sans-serif',
 ];
 
+const kCanvasPercentMin = 0.0;
+const kCanvasPercentMax = 100.0;
+const kRegionMinSizePercent = 5.0;
+
 double canvasFontScale(double canvasWidth) => canvasWidth / 1920;
 
 /// 텍스트 요소의 (x, y) 기준점. [center]만 중심, 그 외는 왼쪽 상단.
@@ -118,12 +122,48 @@ Size measureTextBlockSize({
   return Size(maxWidth + pad, totalHeight + pad);
 }
 
+/// 퍼센트 좌표 박스를 화면 픽셀 Rect로 변환합니다.
+Rect percentBoxScreenRect({
+  required double x,
+  required double y,
+  required double width,
+  required double height,
+  required double canvasWidth,
+  required double canvasHeight,
+  String? anchor,
+}) {
+  final boxW = width / 100 * canvasWidth;
+  final boxH = height / 100 * canvasHeight;
+  final px = x / 100 * canvasWidth;
+  final py = y / 100 * canvasHeight;
+  if (isCenterAnchored(anchor)) {
+    return Rect.fromCenter(
+      center: Offset(px, py),
+      width: boxW,
+      height: boxH,
+    );
+  }
+  return Rect.fromLTWH(px, py, boxW, boxH);
+}
+
 Rect textElementScreenRect({
   required SlideElement element,
   required ResolvedTextStyle style,
   required double canvasWidth,
   required double canvasHeight,
 }) {
+  if (element.width != null && element.height != null) {
+    return percentBoxScreenRect(
+      x: element.x,
+      y: element.y,
+      width: element.width!,
+      height: element.height!,
+      canvasWidth: canvasWidth,
+      canvasHeight: canvasHeight,
+      anchor: element.anchor,
+    );
+  }
+
   final lines = element.lines ?? const [''];
   final size = measureTextBlockSize(
     lines: lines,

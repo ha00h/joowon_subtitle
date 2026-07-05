@@ -8,7 +8,15 @@ class AppSettings {
     this.styleBookmark,
     this.outputBackground = OutputBackground.black,
     this.outputMonitorId,
+    this.operatorPanelWidth = 300,
+    this.operatorSearchListRatio = 0.6,
   });
+
+  static const defaultOperatorPanelWidth = 300.0;
+  static const minOperatorPanelWidth = 240.0;
+  static const maxOperatorPanelWidth = 480.0;
+  static const minOperatorSearchListRatio = 0.25;
+  static const maxOperatorSearchListRatio = 0.75;
 
   final String? workspacePath;
   final String? workspaceBookmark;
@@ -16,6 +24,8 @@ class AppSettings {
   final String? styleBookmark;
   final OutputBackground outputBackground;
   final String? outputMonitorId;
+  final double operatorPanelWidth;
+  final double operatorSearchListRatio;
 
   AppSettings copyWith({
     String? workspacePath,
@@ -24,6 +34,8 @@ class AppSettings {
     String? styleBookmark,
     OutputBackground? outputBackground,
     String? outputMonitorId,
+    double? operatorPanelWidth,
+    double? operatorSearchListRatio,
     bool clearWorkspacePath = false,
     bool clearWorkspaceBookmark = false,
     bool clearStylePath = false,
@@ -43,6 +55,9 @@ class AppSettings {
       outputMonitorId: clearOutputMonitorId
           ? null
           : (outputMonitorId ?? this.outputMonitorId),
+      operatorPanelWidth: operatorPanelWidth ?? this.operatorPanelWidth,
+      operatorSearchListRatio:
+          operatorSearchListRatio ?? this.operatorSearchListRatio,
     );
   }
 }

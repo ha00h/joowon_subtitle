@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "찬양 성부 성자 성령",
+  "hymnNumber": 2,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "7faa73df-8a40-4428-b2f2-5e7d92adcdf7",
+          "id": "18e8ba3c-cdb1-4913-96c4-0e4c5226a7e5",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,
@@ -38,7 +39,7 @@
       "elements": [
         {
           "type": "text",
-          "id": "4be3d33c-2179-43cd-a50d-d681cd68c24b",
+          "id": "b02bfaae-ce2c-46fb-ad80-229b394033f8",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

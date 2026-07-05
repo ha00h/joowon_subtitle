@@ -1,0 +1,123 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "거룩 거룩 거룩 (1절)",
+  "hymnNumber": 8,
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "verseLabel",
+          "id": "923d32a0-02b9-46e1-b28f-f691618a851e",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 8장 1절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
+          "type": "text",
+          "id": "e33eceb7-abba-43ae-8288-46d1057fc018",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "거룩 거룩 거룩 전능하신 주님",
+            "이른 아침 우리 주를 찬송 합니다"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "1절"
+    },
+    {
+      "elements": [
+        {
+          "type": "verseLabel",
+          "id": "95f5aacb-6a7e-413c-bdac-50a63ed24ba0",
+          "x": 50.0,
+          "y": 4.0,
+          "zIndex": 2,
+          "lines": [
+            "새찬송가 8장 1절 마지막"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 36.0,
+          "fontWeight": 600,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 24.0,
+          "height": 8.0
+        },
+        {
+          "type": "text",
+          "id": "790e24a4-f481-4bb1-9251-5e4bf1955153",
+          "x": 50.0,
+          "y": 50.0,
+          "zIndex": 1,
+          "lines": [
+            "거룩 거룩 거룩 자비하신 주님",
+            "성 삼위일체 우리 주로다"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Noto Sans KR",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FFFFFF",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "center",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ]
+    }
+  ]
+}

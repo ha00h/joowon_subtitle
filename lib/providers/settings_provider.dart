@@ -99,6 +99,24 @@ class SettingsNotifier extends Notifier<AppSettings> {
       clearOutputMonitorId: id == null,
     );
   }
+
+  Future<void> setOperatorPanelWidth(double width) async {
+    final clamped = width.clamp(
+      AppSettings.minOperatorPanelWidth,
+      AppSettings.maxOperatorPanelWidth,
+    );
+    await _repo.writeOperatorPanelWidth(clamped);
+    state = state.copyWith(operatorPanelWidth: clamped);
+  }
+
+  Future<void> setOperatorSearchListRatio(double ratio) async {
+    final clamped = ratio.clamp(
+      AppSettings.minOperatorSearchListRatio,
+      AppSettings.maxOperatorSearchListRatio,
+    );
+    await _repo.writeOperatorSearchListRatio(clamped);
+    state = state.copyWith(operatorSearchListRatio: clamped);
+  }
 }
 
 final settingsProvider =

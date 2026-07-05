@@ -1,0 +1,105 @@
+{
+  "format": "joowon-subtitle",
+  "version": 2,
+  "title": "거룩 거룩 거룩2",
+  "slides": [
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t1",
+          "x": 40.6715158045977,
+          "y": 66.2124840357599,
+          "zIndex": 1,
+          "lines": [
+            "거룩 거룩 거룩",
+            "전능하신 주 하나님"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Black Han Sans",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FF69B4",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "1절",
+      "colorTag": "#FF6B6B"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t2",
+          "x": 40.6715158045977,
+          "y": 66.2124840357599,
+          "zIndex": 1,
+          "lines": [
+            "옛적에도 지금도",
+            "앞으로도 영원히"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Black Han Sans",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FF69B4",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "colorTag": "#FFA500"
+    },
+    {
+      "elements": [
+        {
+          "type": "text",
+          "id": "t3",
+          "x": 40.6715158045977,
+          "y": 66.2124840357599,
+          "zIndex": 1,
+          "lines": [
+            "온 천하 만물이",
+            "주를 찬양하리"
+          ],
+          "anchor": "topLeft",
+          "fontFamily": "Black Han Sans",
+          "fontSize": 72.0,
+          "fontWeight": 700,
+          "color": "#FF69B4",
+          "textShadow": "2.0px 2.0px 8.0px rgba(0,0,204,0.00)",
+          "textAlign": "left",
+          "textStrokeWidth": 0.0,
+          "textStrokeColor": "#000000",
+          "shadowEnabled": true,
+          "shadowOffsetX": 2.0,
+          "shadowOffsetY": 2.0,
+          "shadowBlur": 8.0,
+          "shadowColor": "#000000CC",
+          "width": 85.0,
+          "height": 50.0
+        }
+      ],
+      "tag": "3절",
+      "colorTag": "#808080"
+    }
+  ]
+}

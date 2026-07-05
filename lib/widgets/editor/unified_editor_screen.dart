@@ -82,6 +82,19 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
     final regions = draft.textRegions
         .map((r) => r.id == region.id ? region : r)
         .toList();
+
+    if (region.id == 'verseLabel') {
+      _updateStyleDraft(
+        draft.copyWith(
+          textRegions: regions,
+          verseLabel: draft.verseLabel.copyWith(
+            defaultPosition: (x: region.x, y: region.y),
+          ),
+        ),
+      );
+      return;
+    }
+
     final body = regions.firstWhere((r) => r.id == 'body', orElse: () => region);
     _updateStyleDraft(
       draft.copyWith(
@@ -386,13 +399,22 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
       return const Center(child: Text('스타일을 선택하세요'));
     }
 
+    final regionId = _selectedRegionId ?? 'body';
+    final isVerseLabel = regionId == 'verseLabel';
+    final regionLabel = isVerseLabel ? '절 표기' : '본문';
+    final textStyle = isVerseLabel ? draft.verseLabel : draft.text;
+
     return EditorToolsPanel(
-      title: '스타일 도구',
+      title: '스타일 도구 — $regionLabel',
       background: draft.background,
-      textStyle: draft.text,
+      textStyle: textStyle,
       onBackgroundChanged: (bg) =>
           _updateStyleDraft(draft.copyWith(background: bg)),
-      onTextStyleChanged: (text) => _updateStyleDraft(draft.copyWith(text: text)),
+      onTextStyleChanged: (text) => _updateStyleDraft(
+        isVerseLabel
+            ? draft.copyWith(verseLabel: text)
+            : draft.copyWith(text: text),
+      ),
     );
   }
 
@@ -420,7 +442,16 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
       }
     }
 
-    final panelTextStyle = _textStyleForPanel(styleFile.text, selected);
+    final panelTextStyle = _textStyleForPanel(styleFile, selected);
+
+    final hasVerseLabel = slideHasVerseLabel(slide.elements);
+    final canEnableVerseLabel = verseLabelTextForSlide(
+              slide: slide,
+              allSlides: sub.slides,
+              hymnNumber: sub.hymnNumber,
+              slideIndex: slideIdx,
+            ) !=
+            null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -430,7 +461,23 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
           onApplied: () => _snack('스타일을 적용했습니다'),
         ),
         const Divider(height: 1),
-        if (selected != null && selected.type == SlideElementType.text) ...[
+        SwitchListTile(
+          title: const Text('절 표기'),
+          subtitle: Text(
+            slide.tag ?? '슬라이드 태그 없음',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          value: hasVerseLabel,
+          onChanged: canEnableVerseLabel || hasVerseLabel
+              ? (enabled) {
+                  ref
+                      .read(playbackProvider.notifier)
+                      .setSlideVerseLabel(slideIdx, enabled: enabled);
+                }
+              : null,
+        ),
+        const Divider(height: 1),
+        if (selected != null && isTextLikeElement(selected.type)) ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
             child: OutlinedButton.icon(
@@ -460,7 +507,7 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
               ref.read(outputWindowProvider.notifier).syncPlaybackIfOpen();
             },
             onTextStyleChanged: (textStyle) {
-              if (selected == null || selected.type != SlideElementType.text) {
+              if (selected == null || !isTextLikeElement(selected.type)) {
                 return;
               }
               ref.read(playbackProvider.notifier).updateElement(
@@ -488,12 +535,15 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
   }
 
   TextStyleConfig _textStyleForPanel(
-    TextStyleConfig base,
+    StyleFile styleFile,
     SlideElement? element,
   ) {
-    if (element == null) return base;
-    final resolver = StyleResolver(styleFile: ref.read(activeStyleFileProvider));
+    if (element == null) return styleFile.text;
+    final resolver = StyleResolver(styleFile: styleFile);
     final resolved = resolver.resolveText(element);
+    final base = element.type == SlideElementType.verseLabel
+        ? styleFile.verseLabel
+        : styleFile.text;
     return base.copyWith(
       fontFamily: resolved.fontFamily,
       fontSize: resolved.fontSize,

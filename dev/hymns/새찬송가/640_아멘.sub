@@ -2,12 +2,13 @@
   "format": "joowon-subtitle",
   "version": 2,
   "title": "아멘",
+  "hymnNumber": 640,
   "slides": [
     {
       "elements": [
         {
           "type": "text",
-          "id": "46959e1a-e99d-4349-adf8-a6df805ce599",
+          "id": "118bf1af-d3ef-4d99-af2a-ad32f8d3e3d3",
           "x": 50.0,
           "y": 50.0,
           "zIndex": 1,

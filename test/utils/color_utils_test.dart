@@ -29,5 +29,20 @@ void main() {
       expect(normalizeHexColor('ffd700'), '#FFD700');
       expect(normalizeHexColor('#abc'), null);
     });
+
+    test('colorToRgb and colorFromRgb roundtrip', () {
+      const color = Color(0xFFFF5722);
+      final rgb = colorToRgb(color);
+      expect(rgb.r, 255);
+      expect(rgb.g, 87);
+      expect(rgb.b, 34);
+      expect(colorFromRgb(rgb.r, rgb.g, rgb.b), color);
+    });
+
+    test('parseRgbChannel validates range', () {
+      expect(parseRgbChannel('128'), 128);
+      expect(parseRgbChannel('256'), null);
+      expect(parseRgbChannel('-1'), null);
+    });
   });
 }

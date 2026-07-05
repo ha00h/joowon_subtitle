@@ -12,6 +12,7 @@ import '../providers/style_provider.dart';
 import '../providers/workspace_provider.dart';
 import '../widgets/dialogs/import_preview_dialog.dart';
 import 'sub_io.dart';
+import 'workspace_file_ops.dart';
 
 class ImportFlow {
   ImportFlow({
@@ -39,7 +40,8 @@ class ImportFlow {
     if (txtPath == null) return;
 
     final content = await File(txtPath).readAsString();
-    final title = p.basenameWithoutExtension(txtPath);
+    final baseName = sanitizeSubBaseName(p.basenameWithoutExtension(txtPath));
+    final title = titleFromSubBaseName(baseName);
 
     if (!context.mounted) return;
     await _runPreviewAndCommit(
@@ -47,6 +49,7 @@ class ImportFlow {
       ref: ref,
       workspace: workspace,
       title: title,
+      fileBaseName: baseName,
       content: content,
     );
   }
@@ -61,14 +64,13 @@ class ImportFlow {
     final clip = await Clipboard.getData('text/plain');
     final content = clip?.text ?? '';
 
-    final title = '클립보드_${DateTime.now().millisecondsSinceEpoch}';
-
     if (!context.mounted) return;
     await _runPreviewAndCommit(
       context: context,
       ref: ref,
       workspace: workspace,
-      title: title,
+      title: '',
+      fileBaseName: '',
       content: content,
     );
   }
@@ -78,6 +80,7 @@ class ImportFlow {
     required WidgetRef ref,
     required String workspace,
     required String title,
+    required String fileBaseName,
     required String content,
   }) async {
     if (!context.mounted) return;
@@ -89,11 +92,12 @@ class ImportFlow {
       context: context,
       ref: ref,
       title: title,
+      fileBaseName: fileBaseName,
       content: content,
     );
     if (preview == null) return;
 
-    final subPath = _uniqueSubPath(workspace, title);
+    final subPath = _uniqueSubPath(workspace, preview.fileBaseName);
     _subIo.writeFile(subPath, preview.sub);
     ref.read(workspaceProvider.notifier).rescan();
     ref.read(playbackProvider.notifier).loadImportedSub(subPath, preview.sub);
@@ -103,15 +107,16 @@ class ImportFlow {
     }
   }
 
-  String _uniqueSubPath(String workspace, String title) {
-    var candidate = p.join(workspace, '$title.sub');
+  String _uniqueSubPath(String workspace, String fileBaseName) {
+    final safeName = sanitizeSubBaseName(fileBaseName);
+    var candidate = p.join(workspace, '$safeName.sub');
     if (!File(candidate).existsSync()) return candidate;
 
     var index = 2;
-    while (File(p.join(workspace, '${title}_$index.sub')).existsSync()) {
+    while (File(p.join(workspace, '${safeName}_$index.sub')).existsSync()) {
       index++;
     }
-    return p.join(workspace, '${title}_$index.sub');
+    return p.join(workspace, '${safeName}_$index.sub');
   }
 
   void _showMessage(BuildContext context, String message) {

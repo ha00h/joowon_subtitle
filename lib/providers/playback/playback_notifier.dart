@@ -207,7 +207,11 @@ class PlaybackNotifier extends Notifier<PlaybackState>
     if (idx < 0 || idx >= sub.slides.length) return null;
 
     final slides = [...sub.slides];
-    slides[idx] = Slide(elements: elements);
+    slides[idx] = Slide(
+      elements: elements,
+      tag: slides[idx].tag,
+      colorTag: slides[idx].colorTag,
+    );
     return sub.copyWith(slides: slides);
   }
 
@@ -353,5 +357,21 @@ class PlaybackNotifier extends Notifier<PlaybackState>
       layout: SlidePanelLayout.orderSequence,
       slideIndex: slideIndex,
     );
+  }
+
+  void replacePathIfMatches(
+    String oldPath,
+    String newPath, {
+    String? newTitle,
+  }) {
+    if (state.currentPath != oldPath) return;
+    final sub = state.currentSub;
+    state = state.copyWith(
+      currentPath: newPath,
+      currentSub: newTitle != null && sub != null
+          ? sub.copyWith(title: newTitle)
+          : sub,
+    );
+    syncToOutput();
   }
 }
