@@ -1,6 +1,7 @@
 part of 'playback.dart';
 
-/// 요소에 지정된 텍스트 스타일 override를 제거하고 스타일 기본값을 따르게 함
+/// 요소에 지정된 텍스트 스타일 override를 제거하고 스타일 기본값을 따르게 함.
+/// 위치·크기(width/height)·앵커는 유지한다.
 SlideElement clearTextStyleOverrides(SlideElement el) {
   return SlideElement(
     id: el.id,
@@ -10,6 +11,8 @@ SlideElement clearTextStyleOverrides(SlideElement el) {
     zIndex: el.zIndex,
     lines: el.lines,
     anchor: el.anchor,
+    width: el.width,
+    height: el.height,
   );
 }
 

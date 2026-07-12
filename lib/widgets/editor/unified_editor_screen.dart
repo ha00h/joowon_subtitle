@@ -13,6 +13,7 @@ import '../../widgets/canvas/canvas_renderer.dart';
 import '../../widgets/common/aspect_ratio_fhd.dart';
 import '../../widgets/editor/editor_tools_panel.dart';
 import '../../widgets/editor/slide_style_apply_panel.dart';
+import '../../widgets/editor/slide_style_save_panel.dart';
 import '../../widgets/editor/style_region_canvas.dart';
 
 enum UnifiedEditorMode { style, slide }
@@ -30,15 +31,18 @@ class UnifiedEditorScreen extends ConsumerStatefulWidget {
       _UnifiedEditorScreenState();
 }
 
-class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
+class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen>
+    with SingleTickerProviderStateMixin {
   StyleEntry? _editingStyle;
   StyleFile? _styleDraft;
   String? _selectedRegionId;
   final _nameController = TextEditingController();
+  late final TabController _slideToolsTabController;
 
   @override
   void initState() {
     super.initState();
+    _slideToolsTabController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) => _initStyleCatalog());
   }
 
@@ -59,6 +63,7 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
 
   @override
   void dispose() {
+    _slideToolsTabController.dispose();
     _nameController.dispose();
     super.dispose();
   }
@@ -456,11 +461,62 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        TabBar(
+          controller: _slideToolsTabController,
+          tabs: const [
+            Tab(text: '스타일'),
+            Tab(text: '직접 편집'),
+          ],
+        ),
+        Expanded(
+          child: TabBarView(
+            controller: _slideToolsTabController,
+            children: [
+              _buildSlideStyleTab(slideIdx),
+              _buildSlideDirectEditTab(
+                slide: slide,
+                slideIdx: slideIdx,
+                selected: selected,
+                styleFile: styleFile,
+                panelTextStyle: panelTextStyle,
+                hasVerseLabel: hasVerseLabel,
+                canEnableVerseLabel: canEnableVerseLabel,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSlideStyleTab(int slideIdx) {
+    return ListView(
+      children: [
         SlideStyleApplyPanel(
           slideIndex: slideIdx,
           onApplied: () => _snack('스타일을 적용했습니다'),
         ),
         const Divider(height: 1),
+        SlideStyleSavePanel(
+          slideIndex: slideIdx,
+          onSaved: () => _snack('스타일에 저장했습니다'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSlideDirectEditTab({
+    required Slide slide,
+    required int slideIdx,
+    required SlideElement? selected,
+    required StyleFile styleFile,
+    required TextStyleConfig panelTextStyle,
+    required bool hasVerseLabel,
+    required bool canEnableVerseLabel,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         SwitchListTile(
           title: const Text('절 표기'),
           subtitle: Text(
@@ -479,11 +535,11 @@ class _UnifiedEditorScreenState extends ConsumerState<UnifiedEditorScreen> {
         const Divider(height: 1),
         if (selected != null && isTextLikeElement(selected.type)) ...[
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: OutlinedButton.icon(
               onPressed: () {
                 ref.read(playbackProvider.notifier).updateElement(
-                      clearTextStyleOverrides(selected!),
+                      clearTextStyleOverrides(selected),
                     );
                 _snack('스타일 기본값으로 되돌렸습니다');
               },

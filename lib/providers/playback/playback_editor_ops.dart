@@ -87,4 +87,42 @@ mixin PlaybackEditorOpsMixin on Notifier<PlaybackState> {
     );
     _playback.updateSub(sub.copyWith(slides: slides));
   }
+
+  /// 텍스트 요소의 개별 스타일 override를 제거해 활성 스타일 기본값을 따르게 함.
+  void clearSlideTextStyleOverrides({bool allSlides = false}) {
+    final sub = _playback.currentSub;
+    if (sub == null) return;
+
+    List<SlideElement> cleared(List<SlideElement> elements) {
+      return elements
+          .map(
+            (e) => isTextLikeElement(e.type) ? clearTextStyleOverrides(e) : e,
+          )
+          .toList();
+    }
+
+    if (allSlides) {
+      final slides = sub.slides
+          .map(
+            (s) => Slide(
+              elements: cleared(s.elements),
+              tag: s.tag,
+              colorTag: s.colorTag,
+            ),
+          )
+          .toList();
+      _playback.updateSub(sub.copyWith(slides: slides));
+      return;
+    }
+
+    final idx = state.slideIndex;
+    if (idx < 0 || idx >= sub.slides.length) return;
+    final slides = [...sub.slides];
+    slides[idx] = Slide(
+      elements: cleared(slides[idx].elements),
+      tag: slides[idx].tag,
+      colorTag: slides[idx].colorTag,
+    );
+    _playback.updateSub(sub.copyWith(slides: slides));
+  }
 }
