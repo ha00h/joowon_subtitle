@@ -107,21 +107,43 @@ class _OrderSequenceLayout extends StatefulWidget {
   State<_OrderSequenceLayout> createState() => _OrderSequenceLayoutState();
 }
 
+enum _PathChangeScroll {
+  /// 예배 순서에서 곡 선택 / 키보드로 곡 이동 → 제목이 상단에 오도록
+  sectionTitle,
+
+  /// 슬라이드 마우스 클릭으로 곡이 바뀐 경우 → 이미 보이면 유지, 아니면 최소 이동
+  liveSlideIfNeeded,
+}
+
 class _OrderSequenceLayoutState extends State<_OrderSequenceLayout> {
   Object? _lastScrollKey;
+  _PathChangeScroll? _pendingPathScroll;
+  final Map<int, GlobalKey> _sectionKeys = {};
+  final GlobalKey _liveSlideKey = GlobalKey();
+
+  GlobalKey _keyFor(int itemIndex) =>
+      _sectionKeys.putIfAbsent(itemIndex, GlobalKey.new);
 
   @override
   Widget build(BuildContext context) {
     final order = widget.orderState.activeOrder!;
+    // 곡(섹션)이 바뀔 때만 스크롤 — 같은 곡 안 슬라이드 이동은 목록 유지
     final scrollKey = Object.hash(
       order.id,
       widget.playback.currentPath,
-      widget.playback.slideIndex,
     );
     if (scrollKey != _lastScrollKey) {
       _lastScrollKey = scrollKey;
+      final scrollKind =
+          _pendingPathScroll ?? _PathChangeScroll.sectionTitle;
+      _pendingPathScroll = null;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToActiveSection(widget.orderState.activeItemIndex);
+        switch (scrollKind) {
+          case _PathChangeScroll.sectionTitle:
+            _scrollToActiveSection(widget.orderState.activeItemIndex);
+          case _PathChangeScroll.liveSlideIfNeeded:
+            _ensureLiveSlideVisible(widget.orderState.activeItemIndex);
+        }
       });
     }
 
@@ -142,35 +164,48 @@ class _OrderSequenceLayoutState extends State<_OrderSequenceLayout> {
             try {
               sub = widget.subIo.readFile(item.filePath);
             } catch (_) {
-              return _HymnTitle(title: item.title, error: '파일을 읽을 수 없습니다');
+              return KeyedSubtree(
+                key: _keyFor(itemIndex),
+                child: _HymnTitle(title: item.title, error: '파일을 읽을 수 없습니다'),
+              );
             }
           }
           if (sub.slides.isEmpty) {
-            return _HymnTitle(title: sub.title, error: '슬라이드 없음');
+            return KeyedSubtree(
+              key: _keyFor(itemIndex),
+              child: _HymnTitle(title: sub.title, error: '슬라이드 없음'),
+            );
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                sub.title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 10),
-              _SlideGrid(
-                sub: sub,
-                gridColumns: widget.gridColumns,
-                liveSlideIndex: isActiveHymn && widget.playback.slideIndex >= 0
-                    ? widget.playback.slideIndex
-                    : null,
-                resolveText: widget.resolveText,
-                onSelectSlide: (slideIndex) =>
-                    widget.onSelectSlide(itemIndex, slideIndex),
-                onSlideAction: widget.onSlideAction,
-              ),
-            ],
+          return KeyedSubtree(
+            key: _keyFor(itemIndex),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  sub.title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 10),
+                _SlideGrid(
+                  sub: sub,
+                  gridColumns: widget.gridColumns,
+                  liveSlideIndex: isActiveHymn && widget.playback.slideIndex >= 0
+                      ? widget.playback.slideIndex
+                      : null,
+                  liveSlideKey: isActiveHymn ? _liveSlideKey : null,
+                  resolveText: widget.resolveText,
+                  onSelectSlide: (slideIndex) {
+                    // 다른 곡 슬라이드를 누른 경우: 제목으로 점프하지 않고 해당 슬라이드만 보이게
+                    _pendingPathScroll = _PathChangeScroll.liveSlideIfNeeded;
+                    widget.onSelectSlide(itemIndex, slideIndex);
+                  },
+                  onSlideAction: widget.onSlideAction,
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -178,15 +213,86 @@ class _OrderSequenceLayoutState extends State<_OrderSequenceLayout> {
   }
 
   void _scrollToActiveSection(int itemIndex) {
+    final ctx = _keyFor(itemIndex).currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(
+        ctx,
+        alignment: 0.0,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+      );
+      return;
+    }
+
     if (!widget.verticalController.hasClients) return;
-    const sectionHeight = 280.0;
-    final target = (itemIndex * sectionHeight)
+    const estimatedSectionHeight = 280.0;
+    final estimate = (itemIndex * estimatedSectionHeight)
         .clamp(0.0, widget.verticalController.position.maxScrollExtent);
-    widget.verticalController.animateTo(
-      target,
-      duration: const Duration(milliseconds: 220),
-      curve: Curves.easeOut,
+    widget.verticalController.jumpTo(estimate);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final retryCtx = _keyFor(itemIndex).currentContext;
+      if (retryCtx == null) return;
+      Scrollable.ensureVisible(
+        retryCtx,
+        alignment: 0.0,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  /// 슬라이드가 이미 보이면 스크롤하지 않음. 밖에 있을 때만 최소 이동.
+  void _ensureLiveSlideVisible(int itemIndex) {
+    final liveCtx = _liveSlideKey.currentContext;
+    if (liveCtx != null) {
+      if (_isFullyVisibleInScrollViewport(liveCtx)) return;
+      Scrollable.ensureVisible(
+        liveCtx,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+      );
+      return;
+    }
+
+    if (!widget.verticalController.hasClients) return;
+    const estimatedSectionHeight = 280.0;
+    final estimate = (itemIndex * estimatedSectionHeight)
+        .clamp(0.0, widget.verticalController.position.maxScrollExtent);
+    widget.verticalController.jumpTo(estimate);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final retryLive = _liveSlideKey.currentContext;
+      if (retryLive == null) return;
+      if (_isFullyVisibleInScrollViewport(retryLive)) return;
+      Scrollable.ensureVisible(
+        retryLive,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  static bool _isFullyVisibleInScrollViewport(BuildContext context) {
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize || !box.attached) return false;
+
+    final scrollableState = Scrollable.maybeOf(context);
+    final viewport = scrollableState?.context.findRenderObject() as RenderBox?;
+    if (viewport == null || !viewport.hasSize || !viewport.attached) {
+      return false;
+    }
+
+    final topLeft = box.localToGlobal(Offset.zero);
+    final bottomRight =
+        box.localToGlobal(Offset(box.size.width, box.size.height));
+    final vpTopLeft = viewport.localToGlobal(Offset.zero);
+    final vpBottomRight = viewport.localToGlobal(
+      Offset(viewport.size.width, viewport.size.height),
     );
+
+    return topLeft.dy >= vpTopLeft.dy &&
+        bottomRight.dy <= vpBottomRight.dy &&
+        topLeft.dx >= vpTopLeft.dx &&
+        bottomRight.dx <= vpBottomRight.dx;
   }
 }
 
@@ -224,6 +330,7 @@ class _SlideGrid extends StatelessWidget {
     required this.sub,
     required this.gridColumns,
     required this.liveSlideIndex,
+    this.liveSlideKey,
     required this.resolveText,
     required this.onSelectSlide,
     required this.onSlideAction,
@@ -232,6 +339,7 @@ class _SlideGrid extends StatelessWidget {
   final SubFile sub;
   final int gridColumns;
   final int? liveSlideIndex;
+  final Key? liveSlideKey;
   final ResolvedTextStyle Function(SlideElement) resolveText;
   final ValueChanged<int> onSelectSlide;
   final _SlideGridActions onSlideAction;
@@ -264,7 +372,7 @@ class _SlideGrid extends StatelessWidget {
             final slideNumber = index + 1;
             final slide = sub.slides[index];
             final isLive = liveSlideIndex == index;
-            return Column(
+            final cell = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _SlideLabel(
@@ -294,6 +402,10 @@ class _SlideGrid extends StatelessWidget {
                 ),
               ],
             );
+            if (isLive && liveSlideKey != null) {
+              return KeyedSubtree(key: liveSlideKey, child: cell);
+            }
+            return cell;
           },
         );
       },
