@@ -86,10 +86,6 @@ class _OperatorScreenState extends ConsumerState<OperatorScreen> {
       });
     }
 
-    if (!ref.read(outputWindowProvider).isOpen) {
-      await ref.read(outputWindowProvider.notifier).openOutputWindow();
-    }
-
     _scheduleAutomaticUpdateCheck();
   }
 
