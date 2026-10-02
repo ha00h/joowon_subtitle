@@ -132,6 +132,8 @@ flutter build windows --release
 
 출력: `build\windows\x64\runner\Release\`
 
+GitHub Release로 배포하려면 [RELEASE.md](./RELEASE.md)를 따른다. `main` push의 Build Windows는 아티팩트만 남기고, 사용자에게 주는 zip은 Release 워크플로가 만든다.
+
 ### 3.3 교회 PC 배포
 
 ```

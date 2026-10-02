@@ -14,6 +14,7 @@
 | [PLAN_v1.1.md](./PLAN_v1.1.md) | **v1.1 실행 계획** — v1.0.3 피드백·개발 순서 | 개발 |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | **기술 아키텍처** — 모듈, 상태, 윈도우 | 개발 |
 | [SETUP.md](./SETUP.md) | **개발 환경** — Mac 셋업, Windows CI 빌드 | 개발 |
+| [RELEASE.md](./RELEASE.md) | **릴리즈** — 버전 올리기, 태그, GitHub Release | 개발 |
 | [VERIFICATION.md](./VERIFICATION.md) | **검증 방법** — 단위/통합/수동/수용 테스트 | 개발·QA |
 
 ---
@@ -26,6 +27,7 @@
 3. SETUP.md         → 환경 준비
 4. DEVELOPMENT_PLAN.md → 무엇부터 할지
 5. VERIFICATION.md  → 완료 기준·테스트
+6. RELEASE.md       → 배포할 때
 ```
 
 ---
@@ -37,7 +39,8 @@ MVP.md (무엇)
     ├── DEVELOPMENT_PLAN.md (일정·작업)
     ├── ARCHITECTURE.md (구조)
     ├── SETUP.md (환경)
-    └── VERIFICATION.md (검증)
+    ├── VERIFICATION.md (검증)
+    └── RELEASE.md (배포)
 ```
 
 명세 변경 시 **MVP.md를 먼저** 수정하고, 영향 받는 문서를 갱신한다.
